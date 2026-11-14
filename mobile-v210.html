@@ -114,6 +114,17 @@ nav button.active svg{stroke:#fff}
 .editorial-quick-grid{position:relative;z-index:2;margin-top:-78px;padding-top:0}
 .editorial-quick-tile{box-shadow:0 12px 28px #24180f20}
 @media(min-width:650px){.editorial-cover{min-height:620px}.editorial-quick-grid{margin-top:-75px}}
+
+/* LITHO photo-led editorial hero */
+#home.editorial-home{background:#f4eee7!important}
+#home .editorial-cover{position:relative!important;isolation:isolate;min-height:clamp(510px,72svh,710px)!important;background-image:linear-gradient(180deg,rgba(17,14,12,.06) 0%,rgba(17,14,12,.15) 37%,rgba(17,14,12,.83) 100%),url('./litho-office-hero.jpg')!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;display:flex!important;align-items:flex-end!important;padding:42px 28px 105px!important;border-radius:0!important;overflow:hidden!important}
+#home .editorial-cover-art{display:none!important}
+#home .editorial-cover-content{position:relative!important;z-index:2!important;align-self:auto!important;max-width:440px!important;text-shadow:0 2px 15px rgba(0,0,0,.25)}
+#home .editorial-cover-content h1{color:#fff!important}
+#home .editorial-cover-content p{color:#f5ece4!important}
+#home .editorial-quick-grid{margin-top:-64px!important;position:relative!important;z-index:3!important}
+#home.editorial-home:before{display:none!important}
+@media(max-width:480px){#home .editorial-cover{min-height:68svh!important;background-position:51% center!important;padding:32px 25px 100px!important}}
 </style></head><body>
 <header><div class="brand-row"><button id="appBack" class="menu-toggle" aria-label="Πίσω" title="Πίσω"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><strong>LITHO</strong><small>ARCHITECTURE · MOBILE</small></div></div><div class="header-actions"><span class="pill">LOCAL · v2.10</span><button id="menuToggle" class="menu-toggle" aria-label="Άνοιγμα μενού" aria-controls="sideMenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header><div id="menuOverlay" class="menu-overlay" hidden></div><aside id="sideMenu" class="side-menu" aria-label="Πρόσθετες ενότητες" aria-hidden="true"><div class="row"><h2>Μενού LITHO</h2><button class="btn alt" id="menuClose" aria-label="Κλείσιμο μενού">✕</button></div><button data-menu-tab="tasks">☑ Εργασίες</button><button data-menu-tab="notes">✎ Σημειώσεις</button><button data-menu-tab="gallery">▧ Φωτογραφίες</button><button data-menu-tab="settings">⚙ Ρυθμίσεις</button></aside>
 <main>
