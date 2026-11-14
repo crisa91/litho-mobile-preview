@@ -115,9 +115,18 @@ nav button.active svg{stroke:#fff}
 .editorial-quick-tile{box-shadow:0 12px 28px #24180f20}
 @media(min-width:650px){.editorial-cover{min-height:620px}.editorial-quick-grid{margin-top:-75px}}
 
+
+/* Full screen photo treatment, including dashboard */
+#home.editorial-home{position:relative!important;isolation:isolate!important;background:linear-gradient(180deg,rgba(17,14,12,.12) 0%,rgba(17,14,12,.55) 52%,rgba(17,14,12,.85) 100%),url('./litho-office-hero.jpg') center top/cover no-repeat!important;min-height:calc(100svh - 160px)!important;padding-bottom:110px!important}
+#home .editorial-cover{background:none!important;background-image:none!important;min-height:clamp(450px,65svh,680px)!important}
+#home .editorial-cover-content{color:white!important}
+#home .editorial-quick-grid{margin-top:-62px!important;position:relative!important;z-index:4!important}
+#home .editorial-quick-tile{background:rgba(250,245,238,.95)!important;backdrop-filter:blur(14px)!important}
+#home .editorial-quick-tile:nth-child(2){background:#a95d3f!important;color:white!important}
+
 /* LITHO photo-led editorial hero */
 #home.editorial-home{background:#f4eee7!important}
-#home .editorial-cover{position:relative!important;isolation:isolate;min-height:clamp(510px,72svh,710px)!important;background-image:linear-gradient(180deg,rgba(17,14,12,.06) 0%,rgba(17,14,12,.15) 37%,rgba(17,14,12,.83) 100%),url('./litho-office-hero.jpg')!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;display:flex!important;align-items:flex-end!important;padding:42px 28px 105px!important;border-radius:0!important;overflow:hidden!important}
+#home .editorial-cover{position:relative!important;isolation:isolate;min-height:clamp(510px,72svh,710px)!important;background-image:none!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;display:flex!important;align-items:flex-end!important;padding:42px 28px 105px!important;border-radius:0!important;overflow:hidden!important}
 #home .editorial-cover-art{display:none!important}
 #home .editorial-cover-content{position:relative!important;z-index:2!important;align-self:auto!important;max-width:440px!important;text-shadow:0 2px 15px rgba(0,0,0,.25)}
 #home .editorial-cover-content h1{color:#fff!important}
