@@ -256,7 +256,63 @@ async function openDrawing(item){activeDrawing=item;pinMode=false;$("drawingPinM
 $("drawingClose").addEventListener("click",()=>$("drawingDialog").close());
 $("drawingSave").addEventListener("click",async()=>{if(!activeDrawing)return;const photos=[...(activeDrawing.photos||[])];for(const f of $("drawingPhotos").files){if(!f.type.startsWith("image/")||f.size>8000000){alert("Image max 8 MB");continue}photos.push({id:crypto.randomUUID(),name:f.name,blob:f})}const updated={...activeDrawing,notes:$("drawingNotes").value,photos};try{await drawingOp("readwrite",st=>st.put(updated));activeDrawing=updated;$("drawingPhotos").value="";$("drawingDialog").close();await renderDrawings()}catch{alert(appLang==="en"?"Save failed.":"Αποτυχία αποθήκευσης.")}});
 $("drawingDelete").addEventListener("click",async()=>{if(!activeDrawing||!confirm(appLang==="en"?"Delete drawing and attached photos?":"Διαγραφή σχεδίου και συνημμένων φωτογραφιών;"))return;await drawingOp("readwrite",st=>st.delete(activeDrawing.id));$("drawingDialog").close();renderDrawings()});
-$("inspectionPdf").addEventListener("click",async()=>{const id=$("siteProject").value;if(!id){alert(appLang==="en"?"Select a project first.":"Επίλεξε πρώτα έργο.");return}const p=state.projects.find(x=>x.id===id);if(!p)return;const all=await drawingAll(),items=all.filter(x=>x.projectId===id);const escape=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));const en=appLang==="en";const html='<html lang="'+appLang+'"><head><meta charset="utf-8"><title>LITHO Inspection</title><style>body{font:14px Arial,sans-serif;padding:30px;color:#302a25}h1{border-bottom:2px solid #70533d;padding-bottom:12px}article{border-bottom:1px solid #ddd;padding:12px 0}small{color:#666}</style></head><body><h1>LITHO — '+(en?"Site Inspection Report":"Έκθεση αυτοψίας")+'</h1><p><b>'+(en?"Project: ":"Έργο: ")+'</b>'+escape(p.title)+'</p><p><b>'+(en?"Date: ":"Ημερομηνία: ")+'</b>'+new Date().toLocaleDateString(en?"en-GB":"el-GR")+'</p><h2>'+(en?"Drawings and notes":"Σχέδια και σημειώσεις")+'</h2>'+items.map(x=>'<article><b>'+escape(x.name)+'</b><p>'+escape(x.notes)+'</p><small>'+(en?"Attached photos: ":"Συνημμένες φωτογραφίες: ")+(x.photos||[]).length+'</small></article>').join("")+'<h2>'+(en?"Drawing issue pins":"Ζητήματα σχεδίων")+'</h2>'+items.flatMap(x=>(x.pins||[]).map((pin,i)=>'<article><b>'+escape(x.name)+' #'+(i+1)+' — '+escape(pin.title)+'</b><p>'+escape(pin.notes)+'</p><small>'+(pin.status==='resolved'?(en?'Resolved':'Επιλύθηκε'):(en?'Open':'Ανοιχτό'))+'</small></article>')).join('')+'<h2>'+(en?"Inspection entries":"Καταχωρίσεις αυτοψιών")+'</h2>'+(p.events||[]).map(x=>'<article><b>'+escape(x.title)+'</b> · '+escape(x.date)+'<p>'+escape(x.work)+'</p><p>'+escape(x.notes)+'</p></article>').join("")+'</body></html>';const blob=new Blob([html],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);alert(en?"Open the report and choose Print → Save as PDF.":"Άνοιξε την αναφορά και επίλεξε Εκτύπωση → Αποθήκευση ως PDF.")});
+$("inspectionPdf").addEventListener("click",async()=>{const id=$("siteProject").value;if(!id){alert(appLang==="en"?"Select a project first.":"Επίλεξε πρώτα έργο.");return}const p=state.projects.find(x=>x.id===id);if(!p)return;const all=await drawingAll(),items=all.filter(x=>x.projectId===id);const escape=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));const en=appLang==="en";const html='<html lang="'+appLang+'"><head><meta charset="utf-8"><title>LITHO Inspection</title><style>body{font:14px Arial,sans-serif;padding:30px;color:#302a25}h1{border-bottom:2px solid #70533d;padding-bottom:12px}article{border-bottom:1px solid #ddd;padding:12px 0}small{color:#666}</style></head><body><h1>LITHO — '+(en?"Site Inspection Report":"Έκθεση αυτοψίας")+'</h1><p><b>'+(en?"Project: ":"Έργο: ")+'</b>'+escape(p.title)+'</p><p><b>'+(en?"Date: ":"Ημερομηνία: ")+'</b>'+new Date().toLocaleDateString(en?"en-GB":"el-GR")+'</p><h2>'+(en?"Drawings and notes":"Σχέδια και σημειώσεις")+'</h2>'+items.map(x=>'<article><b>'+escape(x.name)+'</b><p>'+escape(x.notes)+'</p><small>'+(en?"Attached photos: ":"Συνημμένες φωτογραφίες: ")+(x.photos||[]).length+'</small></article>').join("")+'<h2>'+(en?"Drawing issue pins":"Ζητήματα σχεδίων")+'</h2>'+items.flatMap(x=>(x.pins||[]).map((pin,i)=>'<article><b>'+escape(x.name)+' #'+(i+1)+' — '+escape(pin.title)+'</b><p>'+escape(pin.notes)+'</p><small>'+(pin.status==='resolved'?(en?'Resolved':'Επιλύθηκε'):(en?'Open':'Ανοιχτό'))+'</small></article>')).join('')+'<h2>'+(en?"Inspection entries":"Καταχωρίσεις αυτοψιών")+'</h2>'+(p.events||[]).map(x=>'<article><b>'+escape(x.title)+'</b> · '+escape(x.date)+'<p>'+escape(x.work)+'</p><p>'+escape(x.notes)+'</p></article>').join("")+'<style id="litho-editorial-theme">
+/* LITHO EDITORIAL STUDIO — secondary screens, 2026-11-15 */
+:root{--l-ink:#29251f;--l-paper:#f5f1e9;--l-terra:#a65e43;--l-line:#d8cbbd}
+body{background:var(--l-paper)}
+main{max-width:960px}
+main>section:not(#home){padding:25px 4px 42px;animation:lithoReveal .25s ease}
+@keyframes lithoReveal{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:none}}
+main>section:not(#home)>.row:first-child{align-items:end;gap:14px;margin-bottom:17px}
+main>section:not(#home) h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(31px,7vw,49px);font-weight:400;letter-spacing:-.045em;line-height:1.05;margin:6px 0 14px}
+main>section:not(#home) h2{font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:400;letter-spacing:-.025em}
+main>section:not(#home) .card{background:#fffcf7;border:1px solid #e3d8cb;border-radius:4px;padding:21px;box-shadow:0 9px 28px #493b2a09}
+main>section:not(#home) .stat{background:#e9e0d4;border-radius:3px}
+main>section:not(#home) .btn{border-radius:3px;background:var(--l-terra);font-size:12px;letter-spacing:.025em}
+main>section:not(#home) .btn.alt{background:#e7ddd0;color:#47372e}
+main>section:not(#home) .search,main>section:not(#home) .field input,main>section:not(#home) .field select,main>section:not(#home) .field textarea{border-radius:3px;border-color:#d7c7b6;background:#fffcf8}
+.litho-section-banner{position:relative;min-height:178px;margin:0 0 23px;display:flex;align-items:end;overflow:hidden;background:#453b33;color:#fff;padding:22px 25px}
+.litho-section-banner::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,19,16,.72),rgba(21,19,16,.14)),var(--l-photo) center/cover no-repeat;filter:saturate(.72)}
+.litho-section-banner>*{position:relative;z-index:1}
+.litho-section-banner .litho-banner-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#f1d8c6}
+.litho-section-banner .litho-banner-title{font-family:Georgia,serif;font-size:clamp(25px,5vw,39px);letter-spacing:-.035em;margin:8px 0 0;font-weight:400}
+#home .editorial-home{background:linear-gradient(180deg,rgba(21,17,14,.2),rgba(21,17,14,.78)),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat!important}
+#home .editorial-cover{background:transparent!important}
+#home .editorial-cover-art{display:none!important}
+#home .editorial-cover-content{position:relative;z-index:2}
+#home .editorial-cover::after{pointer-events:none}
+#projects #projectList .card,#tasks #taskList .card,#notes #notesList .card{border-left:3px solid var(--l-terra)}
+#gallery .photo-tile{border-radius:3px}
+#site .old-site-hero{background:linear-gradient(90deg,rgba(29,25,21,.87),rgba(29,25,21,.24)),url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1300&q=85') center/cover!important;color:white;min-height:230px;display:flex;flex-direction:column;justify-content:end}
+#site .old-site-hero h2{color:white;font-size:clamp(28px,6vw,40px)}
+#site .old-site-hero .sub,#site .old-site-hero .eyebrow{color:#f5e8dd}
+#site .old-site-hero .btn{align-self:flex-start}
+#survey30 .sv-card{border-radius:4px}
+@media(min-width:720px){.litho-section-banner{min-height:220px;padding:34px 40px}main>section:not(#home){padding:30px 12px 60px}}
+@media(max-width:480px){.litho-section-banner{min-height:156px;margin-bottom:19px;padding:19px}main>section:not(#home)>.row:first-child .btn{max-width:44%;white-space:normal}}
+</style><script id="litho-editorial-screens">
+(function(){
+const sections=[
+['projects','PROJECT PORTFOLIO','Κάθε έργο, σε μία εικόνα.','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85'],
+['tasks','STUDIO WORKFLOW','Η οργάνωση αποκτά μορφή.','https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=85'],
+['calendar','STUDIO PLANNER','Χρόνος για όσα έχουν σημασία.','https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=85'],
+['site','SITE MANAGEMENT','Από το σχέδιο στην κατασκευή.','https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1400&q=85'],
+['notes','FIELD NOTES','Οι ιδέες μένουν μαζί σου.','https://images.unsplash.com/photo-1497366858526-0766cadbe8fa?auto=format&fit=crop&w=1400&q=85'],
+['gallery','VISUAL ARCHIVE','Η εξέλιξη σε εικόνες.','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85'],
+['settings','WORKSPACE','Το γραφείο, στα μέτρα σου.','https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=85'],
+['details','PROJECT RECORD','Ο φάκελος του έργου.','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85']
+];
+for(const [id,eyebrow,title,photo] of sections){
+const el=document.getElementById(id);if(!el||el.querySelector('.litho-section-banner'))continue;
+const banner=document.createElement('div');banner.className='litho-section-banner';banner.style.setProperty('--l-photo',"url('"+photo+"')");
+const inner=document.createElement('div');
+const a=document.createElement('div');a.className='litho-banner-eyebrow';a.textContent='LITHO / '+eyebrow;
+const b=document.createElement('div');b.className='litho-banner-title';b.textContent=title;
+inner.append(a,b);banner.append(inner);el.insertBefore(banner,el.firstChild);
+}
+try{console.info('[LITHO:UI] Editorial secondary screens initialized',sections.length)}catch(_){}
+})();
+</script></body></html>';const blob=new Blob([html],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);alert(en?"Open the report and choose Print → Save as PDF.":"Άνοιξε την αναφορά και επίλεξε Εκτύπωση → Αποθήκευση ως PDF.")});
 const RECORDS={owners:"Ιδιοκτήτες",engineers:"Μηχανικοί",documents:"Δικαιολογητικά",events:"Ημερολόγιο"};
 const MUNICIPALITY_OPTIONS=["","Αθηναίων","Αγίας Παρασκευής","Αγίου Δημητρίου","Αιγάλεω","Αλίμου","Αμαρουσίου","Αργυρούπολης - Ελληνικού","Ασπροπύργου","Αχαρνών","Βάρης - Βούλας - Βουλιαγμένης","Βριλησσίων","Βύρωνα","Γαλατσίου","Γλυφάδας","Δάφνης - Υμηττού","Διονύσου","Ελευσίνας","Ζωγράφου","Ηλιούπολης","Ηρακλείου Αττικής","Ιλίου","Καισαριανής","Καλλιθέας","Κερατσινίου - Δραπετσώνας","Κηφισιάς","Κορυδαλλού","Κρωπίας","Λαυρεωτικής","Λυκόβρυσης - Πεύκης","Μάνδρας - Ειδυλλίας","Μαραθώνος","Μαρκοπούλου Μεσογαίας","Μεγαρέων","Μεταμορφώσεως","Μοσχάτου - Ταύρου","Νέας Ιωνίας","Νέας Σμύρνης","Νέας Φιλαδέλφειας - Νέας Χαλκηδόνας","Νίκαιας - Αγίου Ιωάννη Ρέντη","Παιανίας","Παλαιού Φαλήρου","Παλλήνης","Παπάγου - Χολαργού","Πειραιά","Πεντέλης","Περάματος","Περιστερίου","Πετρούπολης","Ραφήνας - Πικερμίου","Σαλαμίνας","Σαρωνικού","Σπάτων - Αρτέμιδος","Τροιζηνίας - Μεθάνων","Φιλοθέης - Ψυχικού","Φυλής","Χαϊδαρίου","Χαλανδρίου","Ωρωπού","Αίγινας","Αγκιστρίου","Θεσσαλονίκης","Πατρέων","Ηρακλείου Κρήτης","Χανίων","Ρεθύμνης","Λαρισαίων","Βόλου","Ιωαννιτών","Καλαμάτας","Ρόδου","Κέρκυρας","Χαλκιδέων","Τρικκαίων","Κατερίνης","Σερρών","Άλλη / Χειροκίνητη καταχώριση"];
 const DOY_OPTIONS=["","Α΄ Αθηνών","Δ΄ Αθηνών","ΙΒ΄ Αθηνών","ΙΓ΄ Αθηνών","ΙΖ΄ Αθηνών","Αμαρουσίου","Γλυφάδας","Καλλιθέας","Κηφισιάς","Κορωπίου","Παλαιού Φαλήρου","Πειραιά","Περιστερίου","Χαλανδρίου","Αιγάλεω","Ελευσίνας","Αχαρνών","Παλλήνης","Θεσσαλονίκης","Πατρών","Ηρακλείου","Χανίων","Λάρισας","Βόλου","Ιωαννίνων","Καλαμάτας","ΚΕΦΟΔΕ Αττικής","ΚΕΦΟΔΕ Θεσσαλονίκης","Άλλη / Χειροκίνητη καταχώριση"];
