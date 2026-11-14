@@ -19,7 +19,7 @@ const KEY="litho_mobile_standalone_v1", $=id=>document.getElementById(id), empty
 let state=load(),tab="home",selectedProject=null,recordType=null;
 function valid(x){return x&&x.version===1&&Array.isArray(x.projects)&&Array.isArray(x.tasks)&&x.projects.length<=5000&&x.tasks.length<=20000&&x.projects.every(p=>p&&typeof p.id==="string"&&typeof p.title==="string"&&p.title.length<=120)&&x.tasks.every(t=>t&&typeof t.id==="string"&&typeof t.title==="string"&&t.title.length<=160)}
 function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return empty();const obj=JSON.parse(raw);return valid(obj)?obj:empty()}catch{return empty()}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));render();return true}catch(e){alert("Δεν έγινε αποθήκευση. Έλεγξε τον διαθέσιμο χώρο και τις ρυθμίσεις browser.");return false}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));render();return true}catch(e){if(localStorage.getItem("litho_mobile_diagnostics_v1")==="true"){try{const k="litho_mobile_diagnostics_events_v1",logs=JSON.parse(localStorage.getItem(k)||"[]");logs.push({at:new Date().toISOString(),event:"storage_save_failed",error:e?.name||"Error"});localStorage.setItem(k,JSON.stringify(logs.slice(-50)))}catch{}}alert("Δεν έγινε αποθήκευση. Έλεγξε τον διαθέσιμο χώρο και τις ρυθμίσεις browser.");return false}}
 const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cls)n.className=cls;return n};
 function action(label,name,id,cls="alt"){const b=node("button",label,"btn "+cls);b.dataset.action=name;if(id)b.dataset.id=id;return b}
 function projectName(id){return state.projects.find(p=>p.id===id)?.title||"Χωρίς έργο"}
