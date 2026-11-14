@@ -48,10 +48,70 @@ dialog{background:#fff;border:1px solid var(--l-line);border-radius:20px;box-sha
 @media(max-width:380px){header strong{font-size:19px}.header-actions{gap:5px}}
 @media(prefers-reduced-motion:reduce){.btn,nav button{transition:none}}
 
+
+/* Editorial Studio V1 — bold visual redesign, preserve existing data & behavior */
+:root{--l-paper:#f5f0e9;--l-ink:#25211e;--l-bronze:#a45c39;--l-soft:#eee4da;--l-line:#e5d8cc}
+body,main{background:#f5f0e9;color:#25211e}
+header{background:#fbf7f2;border-bottom:1px solid #e6d9ce}
+header strong{font-family:Georgia,"Times New Roman",serif;font-size:25px;font-weight:500;letter-spacing:.24em}
+header small{font-size:9px;letter-spacing:.19em}
+header #menuToggle{background:#a45c39;color:white}
+header .pill{background:#f0e5dc;color:#8a5036}
+main{padding-top:0}
+.editorial-home{margin:0 -16px}
+.editorial-cover{min-height:340px;position:relative;overflow:hidden;background:linear-gradient(125deg,#251d18 0%,#47392e 54%,#a58a70 100%);color:#fff;padding:36px 26px 30px;display:flex;align-items:flex-end}
+.editorial-cover-art{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.arch-outer{position:absolute;width:58%;height:115%;right:2%;top:7%;border-radius:49% 49% 0 0 / 35% 35% 0 0;background:linear-gradient(105deg,#806b58,#c7a78a 36%,#725844 39%,#d0b69b 50%,#a18367 100%);box-shadow:-28px 0 65px #140e0a85,inset 18px 0 30px #39261a55;transform:rotate(4deg)}
+.arch-inner{position:absolute;inset:18% 17% -10%;border-radius:48% 48% 0 0 / 32% 32% 0 0;background:linear-gradient(120deg,#2b221c,#6d5542 55%,#382b24);box-shadow:inset 18px 15px 45px #130f0c99}
+.arch-shadow{position:absolute;inset:0;background:linear-gradient(90deg,#1d1713e8 0%,#211a15c2 43%,transparent 100%)}
+.editorial-cover-content{position:relative;z-index:1;max-width:350px}
+.editorial-cover .eyebrow{color:#ead2bd;font-size:10px;letter-spacing:.24em;margin-bottom:14px}
+.editorial-cover h1{color:#fff;font-size:clamp(29px,8vw,40px);font-weight:520;line-height:1.16;letter-spacing:-.035em;margin:0}
+.editorial-rule{height:2px;width:45px;background:#d5a27d;margin:20px 0}
+.editorial-cover p{font-size:13px;color:#eee3d9;line-height:1.6;margin:0}
+.editorial-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:16px}
+.editorial-quick-tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;min-height:148px;border:1px solid #e4d7cb;border-radius:19px;padding:18px 17px;background:linear-gradient(145deg,#fffaf5,#eaddcf);color:#30241d;box-shadow:0 6px 16px #3320150c}
+.editorial-quick-tile .eq-icon{font-size:26px;line-height:1.1;margin-bottom:5px;font-weight:300}
+.editorial-quick-tile>span:nth-child(2){font-size:13px;font-weight:650}
+.editorial-quick-tile strong{font-size:29px;font-weight:720;line-height:1.1}
+.editorial-quick-tile .eq-arrow{position:absolute;right:17px;bottom:17px;font-size:20px}
+.editorial-quick-tile.accent{background:linear-gradient(135deg,#b56a45,#8c492d);border-color:#a45c39;color:#fff}
+.editorial-section-head{padding:10px 17px 0;display:flex;align-items:center;justify-content:space-between}
+.editorial-section-head h2{font-size:19px;letter-spacing:-.03em;margin:8px 0}
+.editorial-text-button{border:0;background:transparent;color:#8d5034;font-size:13px;font-weight:650;padding:10px}
+.editorial-recent{padding:0 16px}
+.editorial-recent .card{border-radius:16px;background:#fffaf5;border:1px solid #e6d9ce}
+.editorial-upcoming{margin:10px 16px 14px}
+.editorial-utility{display:flex;gap:10px;padding:0 16px 10px}
+.editorial-utility .btn{flex:1}
+.editorial-privacy{color:#918477;font-size:11px;padding:0 17px 12px}
+#projects{padding-top:22px}
+#projects h1{font-size:33px;font-weight:650}
+#projectList .card{background:#fffaf5;border-radius:17px;border-color:#e5d8cc}
+#site h1{font-size:30px}
+#site .old-site-hero{background:linear-gradient(130deg,#3a2a23,#8d5b42)!important;color:white;border:0}
+#site .old-site-hero .eyebrow,#site .old-site-hero .sub{color:#e9d8c8}
+#site .old-site-hero .btn{background:#fff3e8;color:#6f422c}
+#survey30{background:#f5f0e9}
+#survey30 .sv-header{background:#fffaf5}
+#survey30 .sv-card{background:#fffaf5;border-color:#e5d8cc}
+nav{background:#fffaf6;border-top-color:#e6d9ce}
+nav button.active{background:#a45c39;color:#fff}
+nav button.active svg{stroke:#fff}
+.btn{background:#a45c39}
+.btn.alt{background:#eee4da}
+@media(min-width:650px){.editorial-home{margin:0}.editorial-cover{border-radius:0 0 22px 22px}.editorial-quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
 </style></head><body>
 <header><div class="brand-row"><button id="appBack" class="menu-toggle" aria-label="Πίσω" title="Πίσω"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><strong>LITHO</strong><small>ARCHITECTURE · MOBILE</small></div></div><div class="header-actions"><span class="pill">LOCAL · v2.10</span><button id="menuToggle" class="menu-toggle" aria-label="Άνοιγμα μενού" aria-controls="sideMenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header><div id="menuOverlay" class="menu-overlay" hidden></div><aside id="sideMenu" class="side-menu" aria-label="Πρόσθετες ενότητες" aria-hidden="true"><div class="row"><h2>Μενού LITHO</h2><button class="btn alt" id="menuClose" aria-label="Κλείσιμο μενού">✕</button></div><button data-menu-tab="tasks">☑ Εργασίες</button><button data-menu-tab="notes">✎ Σημειώσεις</button><button data-menu-tab="gallery">▧ Φωτογραφίες</button><button data-menu-tab="settings">⚙ Ρυθμίσεις</button></aside>
 <main>
-<section id="home"><div class="eyebrow">LITHO ARCHITECTURE</div><h1>Το γραφείο σου, παντού.</h1><div class="card litho-hero"><div class="eyebrow">LITHO · BUILDING MOBILE</div><h2>Από το γραφείο<br>στο εργοτάξιο.</h2><p class="sub">Έργα, σχέδια και αυτοψίες — όλα σε ένα σημείο.</p><button class="btn" id="heroProjects">Προβολή έργων →</button></div><p class="muted">Τα δεδομένα σου αποθηκεύονται μόνο σε αυτόν τον browser. Πάτησε «Καρτέλα έργου» για μηχανικούς, ιδιοκτήτες, δικαιολογητικά και φωτογραφίες.</p><div class="card"><div class="row"><div><h2>Γρήγορη πρόσβαση</h2><p class="sub">Οργάνωση γραφείου και εργοταξίου</p></div></div><div class="actions"><button class="btn alt" id="homeGallery">▧ Φωτογραφίες</button><button class="btn alt" id="homeCalendar">▦ Ημερολόγιο</button><button class="btn alt" id="homeSite">▥ Εργοτάξιο</button><button class="btn alt" id="homeNotes">✎ Σημειώσεις</button></div></div><div class="grid"><div class="stat">Έργα<b id="sProjects">0</b></div><div class="stat">Ενεργά<b id="sActive">0</b></div><div class="stat">Εκκρεμότητες<b id="sPending">0</b></div><div class="stat">Ολοκληρωμένα<b id="sDone">0</b></div></div><div class="card"><div class="row"><h2>Πρόσφατα έργα</h2><button class="btn" data-action="new-project">+ Έργο</button></div><div id="recent"></div></div><div class="card"><h2>Επόμενες εργασίες</h2><div id="upcoming"></div></div></section>
+<section id="home" class="editorial-home">
+<div class="editorial-cover"><div class="editorial-cover-art" aria-hidden="true"><div class="arch-outer"><div class="arch-inner"></div></div><div class="arch-shadow"></div></div><div class="editorial-cover-content"><div class="eyebrow">LITHO / WORKSPACE</div><h1>Το γραφείο σου,<br>παντού.</h1><div class="editorial-rule"></div><p>Αρχιτεκτονική, οργάνωση και εργοτάξιο.<br>Όλα στον χώρο σου.</p></div></div>
+<div class="editorial-quick-grid"><button class="editorial-quick-tile" id="heroProjects"><span class="eq-icon">▱</span><span>Έργα</span><strong id="sProjects">0</strong><span class="eq-arrow">↗</span></button><button class="editorial-quick-tile accent" id="homeSite"><span class="eq-icon">⌖</span><span>Αυτοψίες</span><strong id="sActive">0</strong><span class="eq-arrow">↗</span></button><button class="editorial-quick-tile" id="homeCalendar"><span class="eq-icon">▦</span><span>Ημερολόγιο</span><strong id="sDone">0</strong><span class="eq-arrow">↗</span></button><button class="editorial-quick-tile" id="homeNotes"><span class="eq-icon">☑</span><span>Εκκρεμότητες</span><strong id="sPending">0</strong><span class="eq-arrow">↗</span></button></div>
+<div class="editorial-section-head"><h2>Πρόσφατα έργα</h2><button class="editorial-text-button" data-tab="projects">Όλα ↗</button></div><div class="editorial-recent" id="recent"></div>
+<div class="editorial-section-head"><h2>Επόμενες εργασίες</h2><button class="editorial-text-button" data-action="new-task">+ Νέα</button></div><div class="card editorial-upcoming" id="upcoming"></div>
+<div class="editorial-utility"><button class="btn alt" id="homeGallery">▧ Φωτογραφίες</button><button class="btn alt" data-action="new-project">+ Νέο έργο</button></div>
+<p class="editorial-privacy">Τα δεδομένα σου αποθηκεύονται τοπικά σε αυτόν τον browser.</p></section>
 <section id="projects" hidden><div class="row"><h1>Έργα</h1><button class="btn" data-action="new-project">+ Νέο</button></div><input class="search" id="projectSearch" placeholder="Αναζήτηση έργων, τοποθεσίας..." aria-label="Αναζήτηση έργων"><div id="projectList"></div></section>
 <section id="tasks" hidden><div class="row"><h1>Εργασίες</h1><button class="btn" data-action="new-task">+ Νέα</button></div><select class="search" id="taskFilter" aria-label="Φίλτρο εργασιών"><option value="all">Όλες οι εργασίες</option><option value="open">Εκκρεμείς</option><option value="done">Ολοκληρωμένες</option></select><div id="taskList"></div></section>
 <section id="details" hidden><div class="row"><button class="btn alt" id="backProjects">← Έργα</button><button class="btn" id="detailEdit">Επεξεργασία</button></div><h1 id="detailTitle"></h1><p class="muted" id="detailLocation"></p><div class="card" style="background:#eae0d3"><h2>Γρήγορες ενέργειες</h2><div class="actions"><button class="btn" data-record="engineers">+ Μηχανικός</button><button class="btn alt" id="quickPhoto">+ Φωτογραφία</button><button class="btn alt" data-record="owners">+ Ιδιοκτήτης</button></div></div><div class="card"><div class="row"><h2>Ιδιοκτήτες</h2><button class="btn" data-record="owners">+ Προσθήκη</button></div><div id="detailOwners"></div></div><div class="card"><div class="row"><h2>Μηχανικοί</h2><button class="btn" data-record="engineers">+ Προσθήκη</button></div><div id="detailEngineers"></div></div><div class="card"><div class="row"><h2>Δικαιολογητικά</h2><button class="btn" data-record="documents">+ Προσθήκη</button></div><div id="detailDocuments"></div></div><div class="card"><div class="row"><h2>Ημερολόγιο / Αυτοψίες</h2><button class="btn" data-record="events">+ Συμβάν</button></div><div id="detailEvents"></div></div><div class="card old-site-panel" data-site-panel="photos"><div class="row"><h2>Φωτογραφίες εργοταξίου</h2><label class="btn" for="photoInput">+ Φωτογραφία</label></div><input type="file" accept="image/*" id="photoInput" multiple style="max-width:100%"><p class="sub">Οι φωτογραφίες αποθηκεύονται τοπικά στη συσκευή (IndexedDB). Δεν ανεβαίνουν στο GitHub.</p><div id="detailPhotos"></div></div></section>
