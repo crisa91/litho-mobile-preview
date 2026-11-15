@@ -913,36 +913,95 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 </script><style id="litho-final-more-photo">
 #settings .litho-more-architectural-photo{height:175px;margin:14px 0 17px;border-radius:13px;overflow:hidden;background:linear-gradient(0deg,rgba(37,27,20,.24),rgba(37,27,20,.05)),url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=900&q=80') center/cover no-repeat}
 #settings .litho-settings-heading{font-size:19px!important;font-weight:750!important;letter-spacing:-.03em!important;margin:22px 0 12px!important}
-</style><style id="litho-design-finish-v11">
-/* Final visual continuity: architectural photography, typography and usable touch targets. */
-:root{--litho-stone:#f5eee7;--litho-clay:#a45d3e;--litho-charcoal:#272320;--litho-soft:#e9dbcf}
-html{background:var(--litho-stone)}
-body{background:var(--litho-stone)!important}
-#home{position:relative;background:var(--litho-stone)!important}
-#home .editorial-cover{background:transparent!important;background-image:none!important;isolation:isolate!important;min-height:clamp(370px,57svh,620px)!important;padding-top:38px!important;overflow:visible!important}
-#home .editorial-cover:before{content:"";position:absolute;z-index:-2;inset:-90px -16px -170px!important;display:block!important;background:linear-gradient(to bottom,rgba(19,17,16,.55) 0%,rgba(19,17,16,.2) 30%,rgba(34,24,18,.3) 57%,rgba(245,238,231,.65) 82%,#f5eee7 99%),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=85') center 41%/cover no-repeat!important;pointer-events:none!important}
-#home .editorial-cover:after{content:none!important}
-#home .editorial-cover-content{position:relative!important;z-index:1!important;max-width:550px!important}
-#home .editorial-cover-content h1{font-family:Arial,Helvetica,sans-serif!important;font-weight:700!important;letter-spacing:-.06em!important;font-size:clamp(39px,10vw,65px)!important;line-height:1.02!important;color:#fff!important}
-#home .editorial-cover-content .eyebrow{font-size:10px!important;letter-spacing:.24em!important;color:#f5e9da!important}
-#home .editorial-cover-content p{font-size:13px!important;line-height:1.65!important;color:#fff!important}
-#home .editorial-quick-grid{z-index:3!important;position:relative!important;margin-top:-38px!important;gap:9px!important}
-#home .editorial-quick-tile{min-height:114px!important;border-radius:12px!important;padding:13px!important;box-shadow:0 7px 25px #35251c18!important}
-#home .editorial-quick-tile:nth-child(2){background:#a45d3e!important;color:#fff!important}
-#home .editorial-section-head{margin-top:29px!important}
-#home .editorial-section-head h2{font-size:17px!important;font-weight:750!important;letter-spacing:-.035em!important}
-#home .editorial-recent .litho-project-row{border-radius:14px!important;min-height:190px!important;background:linear-gradient(0deg,rgba(25,21,19,.86),rgba(25,21,19,.1)),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1100&q=80') center/cover!important}
-#projects #projectList>.litho-project-row{background:#fffbf6!important;border-radius:12px!important}
-#tasks #taskList>.litho-task-row{background:#fffbf6!important}
-#calendar #calGrid .calendar-day.selected{background:#a45d3e!important;color:white!important}
-#site #oldSiteHome .old-site-hero{background:linear-gradient(90deg,#191714de,#1917143d),url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1100&q=80') center/cover!important;border-radius:14px!important}
-#site #drawingPreview{background:#e8e1d9!important}
-#site .drawing-pin,#drawingDialog .drawing-pin{width:30px!important;height:30px!important;min-height:30px!important;min-width:30px!important;border-radius:50%!important;border:2px solid white!important;background:#a45d3e!important;color:white!important;font-size:12px!important;font-weight:750!important;touch-action:manipulation}
-dialog#lithoPinEditor{max-width:min(95vw,550px)!important;background:#f6efe8!important;border:1px solid #dfd1c3!important;border-radius:16px!important}
-dialog#lithoPinEditor .litho-pin-photo-strip{min-height:110px!important}
-#notes .litho-note-card{border-radius:14px!important}
-#settings .litho-more-item{background:#fffbf6!important;border-radius:12px!important}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #9c5b40!important;outline-offset:2px!important}
-@media(max-width:420px){#home .editorial-cover{min-height:395px!important}#home .editorial-quick-grid{margin-top:-25px!important}#home .editorial-quick-tile{min-height:105px!important}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style><style id="litho-approved-reference-v12">
+:root{--litho-paper:#f8efe7;--litho-cream:#fff9f3;--litho-clay:#a65534;--litho-text:#24201c;--litho-stroke:#eaddd1}
+html,body{background:var(--litho-paper)!important;color:var(--litho-text)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important;font-size:13px!important}
+main{padding:0 15px 105px!important;max-width:760px!important}
+main>section:not(#home){padding:14px 0 40px!important}
+main>section:not(#home) h1{font-family:inherit!important;font-size:30px!important;font-weight:800!important;letter-spacing:-.065em!important;margin:6px 0 16px!important}
+main>section:not(#home) h2{font-family:inherit!important;font-size:15px!important;font-weight:750!important}
+main>section:not(#home) .card{background:var(--litho-cream)!important;border-radius:12px!important;border:1px solid var(--litho-stroke)!important;box-shadow:0 4px 14px #4b260d0b!important;margin:8px 0!important}
+header{background:var(--litho-paper)!important;min-height:75px!important;padding:14px 19px!important;border:0!important}
+header .litho-wordmark{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:4px!important}
+header .litho-wordmark-name{font-family:Arial,Helvetica,sans-serif!important;letter-spacing:.24em!important;font-size:23px!important;font-weight:400!important;color:#24201c!important}
+header .litho-wordmark-desc{font-size:8px!important;letter-spacing:.19em!important;font-weight:750!important;color:#2b2825!important}
+header .litho-wordmark-desc:after{content:" · MOBILE"}
+header .pill{display:none!important}
+header #menuToggle{width:37px!important;height:37px!important;border-radius:10px!important;background:var(--litho-clay)!important}
+body:not(.litho-home-active) header #menuToggle{display:none!important}
+body.litho-home-active>header{position:absolute!important;inset:0 0 auto!important;background:transparent!important;z-index:20!important;padding:26px 20px 10px!important}
+body.litho-home-active>header .litho-wordmark-name,body.litho-home-active>header .litho-wordmark-desc{color:#fff!important}
+body.litho-home-active>header #menuToggle{display:grid!important}
+header .litho-top-search,header .litho-top-add{height:35px;width:35px;border:0;border-radius:10px;display:grid;place-items:center;background:transparent;color:#35291f;font-size:21px}
+header .litho-top-add{background:var(--litho-clay);color:#fff;font-size:26px}
+body.litho-home-active header .litho-top-search,body.litho-home-active header .litho-top-add{display:none!important}
+#home.editorial-home{background:#f7ede3!important;margin:0 -15px!important;overflow:hidden!important}
+#home .editorial-cover{position:relative!important;display:flex!important;align-items:flex-start!important;min-height:508px!important;padding:150px 28px 155px!important;overflow:hidden!important;isolation:isolate!important;background:linear-gradient(90deg,#1d130caf,transparent 85%),linear-gradient(0deg,#281b1375,transparent 75%),url('https://images.unsplash.com/photo-1762554720036-be145b4a2d6e?auto=format&fit=crop&w=1400&q=85') center/cover!important}
+#home .editorial-cover:before{content:"";display:block!important;position:absolute!important;inset:auto 0 0!important;height:25%!important;z-index:0!important;background:linear-gradient(to bottom,transparent,#f7ede3)!important}
+#home .editorial-cover:after,#home .editorial-cover-art{display:none!important}
+#home .editorial-cover-content{position:relative!important;z-index:2!important;margin:0!important;align-self:flex-start!important;max-width:300px!important;color:#fff!important}
+#home .editorial-cover-content .eyebrow{color:#f8ead9!important;font-size:10px!important;letter-spacing:.2em!important;margin-bottom:12px!important}
+#home .editorial-cover-content h1{font-size:clamp(32px,8.5vw,43px)!important;line-height:1.08!important;letter-spacing:-.052em!important;font-weight:750!important;color:white!important}
+#home .editorial-cover-content p{font-size:12px!important;line-height:1.52!important;color:white!important}
+#home .editorial-quick-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin:-180px 0 0!important;padding:0 19px 7px!important;position:relative!important;z-index:10!important}
+#home .editorial-quick-tile{min-height:118px!important;background:linear-gradient(135deg,#fffcf8,#ecddce)!important;border-radius:12px!important;border:0!important;padding:13px!important;box-shadow:0 4px 14px #42281920!important}
+#home .editorial-quick-tile.accent{background:#a65534!important;color:#fff!important}
+#home .editorial-quick-tile strong{font-size:26px!important;font-weight:800!important}
+#home .editorial-quick-tile>span:nth-child(2){font-size:12px!important;font-weight:750!important}
+#home .editorial-quick-tile .eq-icon svg{width:22px!important;height:22px!important}
+#home .editorial-section-head{margin:8px 19px!important;padding:8px 0 0!important}
+#home .editorial-section-head h2{font-size:16px!important;font-weight:800!important}
+#home .editorial-recent{padding:0 19px!important}
+#home .editorial-recent .litho-project-row{min-height:150px!important;border-radius:12px!important;background:linear-gradient(to top,#1b140dc9,transparent 75%),url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85') center/cover!important}
+#projects #projectList{gap:9px!important}
+#projects #projectList>.litho-project-row{min-height:91px!important;padding:7px!important;background:#fff9f3!important;border-radius:12px!important}
+.litho-project-row-image{width:98px!important;height:98px!important;flex:0 0 98px!important;border-radius:9px!important}
+.litho-project-row-info .item-title{font-size:13px!important;font-weight:800!important}
+.litho-project-row-status{display:none!important}
+.litho-project-meter{margin-top:6px!important}
+.litho-project-bookmark{border:0!important;background:transparent!important;color:#574137!important;font-size:21px!important;align-self:flex-start!important;padding:2px!important}
+.litho-filter-bar{gap:7px!important;margin:4px 0 14px!important}
+.litho-filter-bar button{border-radius:13px!important;padding:9px 12px!important;background:#fff9f3!important;font-size:11px!important}
+.litho-filter-bar button[aria-pressed=true]{background:#302720!important;color:white!important}
+#tasks #taskList>.litho-task-row{border-radius:12px!important;padding:13px!important;background:#fff9f3!important;min-height:77px!important}
+#tasks .litho-task-info .item-title{font-size:12px!important;font-weight:750!important}
+#calendar>.card:first-of-type{background:transparent!important;border:0!important;box-shadow:none!important;padding:6px 2px!important}
+#calendar #calGrid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px!important}
+#calendar #calGrid .calendar-day{aspect-ratio:1!important;min-height:37px!important;border-radius:50%!important}
+#calendar #calGrid .calendar-day.selected{background:#a65534!important;color:#fff!important}
+#calendar #calMonth{font-size:15px!important;font-weight:800!important}
+#calendar>.card:nth-of-type(2){border:0!important;background:transparent!important;box-shadow:none!important;padding:3px!important}
+#calendar #calEntries{background:#fff9f3!important;border-radius:12px!important;padding:5px 11px!important}
+#calendar #newCalendar{display:none!important}
+.litho-calendar-float{position:sticky;z-index:7;bottom:90px;margin:0 0 0 auto;width:45px;height:45px;border:0;border-radius:50%;background:#a65534;color:white;font-size:26px;box-shadow:0 5px 16px #5e361f50}
+#site #oldSiteHome{display:none!important}
+#site #oldSiteWorkspace{padding:0 0 30px!important}
+#site #siteWorkspaceTitle{font-size:21px!important;margin:0 0 6px!important;letter-spacing:-.05em!important}
+#site .litho-site-workspace-tabs{border-radius:10px!important;padding:3px!important;gap:5px!important;background:#f0e5da!important}
+#site .litho-site-workspace-tabs button{font-size:11px!important;min-height:36px!important;border-radius:8px!important}
+#site .litho-site-workspace-tabs button[aria-selected=true]{background:#a65534!important;color:#fff!important}
+#site .old-site-stats{display:none!important}
+#site .old-site-panel[data-site-panel=drawings]{background:transparent!important;border:0!important;box-shadow:none!important;padding:2px!important}
+#site #siteDrawingUpload{padding:10px!important;font-size:11px!important;border:1px dashed #ac876b!important;background:#f0e2d4!important}
+#site .litho-drawing-preview{min-height:280px!important;height:min(78vw,480px)!important;background:#eee5d9!important;border-radius:10px!important}
+#site .litho-preview-pin,#drawingDialog .drawing-pin{background:#a65534!important;color:white!important;border:2px solid white!important;min-width:30px!important;min-height:30px!important;border-radius:50%!important;font-size:12px!important;font-weight:800!important}
+dialog#lithoPinEditor{height:100svh!important;max-height:100svh!important;width:min(100vw,560px)!important;max-width:560px!important;margin:auto!important;border:0!important;border-radius:0!important;padding:21px 15px 95px!important;background:#f8efe7!important}
+#lithoPinEditor .litho-pin-photo-strip{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;overflow:visible!important}
+#lithoPinEditor .litho-pin-photo-strip img:first-child{grid-column:1/-1;width:100%!important;height:210px!important;object-fit:cover!important;border-radius:11px!important}
+#lithoPinEditor .litho-pin-photo-strip img:not(:first-child){width:100%!important;height:80px!important;border-radius:8px!important}
+#settings .litho-more-list{gap:7px!important}
+#settings .litho-more-item{border-radius:12px!important;min-height:64px!important;padding:12px!important;background:#fff9f3!important}
+#settings .litho-more-icon{background:transparent!important;color:#a65534!important;font-size:22px!important}
+#settings .litho-more-architectural-photo{height:225px!important;margin:0 -15px 18px!important;border-radius:0!important}
+#details #lithoProjectCover{height:205px!important;border-radius:11px!important}
+#details #detailTitle{font-size:24px!important;font-weight:800!important;letter-spacing:-.06em!important}
+#details #lithoProjectDetailTabs{gap:4px!important;padding:3px!important;border-radius:11px!important;background:#eee3d8!important}
+#details #lithoProjectDetailTabs button{font-size:11px!important}
+#details #lithoProjectDetailTabs button[aria-selected=true]{background:#a65534!important;color:#fff!important}
+nav[aria-label="Main navigation"]{position:fixed!important;z-index:50!important;bottom:0!important;left:0!important;right:0!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:3px!important;min-height:75px!important;padding:6px 11px calc(9px + env(safe-area-inset-bottom))!important;background:#fff9f3!important;border-top:1px solid #eee2d7!important}
+nav[aria-label="Main navigation"] button{min-height:54px!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#322a25!important;padding:5px 1px!important}
+nav[aria-label="Main navigation"] button.active{background:#a65534!important;color:#fff!important}
+nav[aria-label="Main navigation"] button .litho-nav-label{font-size:9px!important;font-weight:650!important;color:inherit!important}
+nav[aria-label="Main navigation"] button svg{width:20px!important;height:20px!important}
+@media(max-width:370px){#home .editorial-cover{min-height:490px!important;padding-left:22px!important}#home .editorial-quick-grid{margin-top:-170px!important;padding:0 13px!important}.litho-project-row-image{width:87px!important;flex-basis:87px!important}}
 </style></body></html>
