@@ -769,7 +769,9 @@ const i=document.createElement("span");i.className="litho-more-icon";i.textConte
 const t=document.createElement("span"),strong=document.createElement("strong"),small=document.createElement("small");strong.textContent=title;small.textContent=description;t.append(strong,small);
 const arrow=document.createElement("span");arrow.className="litho-more-arrow";arrow.textContent="›";b.append(i,t,arrow);b.addEventListener("click",()=>show(target));list.append(b)
 }
-settings.querySelector("h1")?.after(list);
+const heading=settings.querySelector("h1");if(heading){heading.textContent="Περισσότερα";heading.after(list)}
+const visual=document.createElement("div");visual.className="litho-more-architectural-photo";visual.setAttribute("role","img");visual.setAttribute("aria-label","Αρχιτεκτονική φωτογραφία");list.after(visual);
+const settingsTitle=document.createElement("h2");settingsTitle.className="litho-settings-heading";settingsTitle.textContent="Ρυθμίσεις";visual.after(settingsTitle);
 }
 function initApp(){
 syncHome();new MutationObserver(syncHome).observe($("home"),{attributes:true,attributeFilter:["hidden"]});
@@ -895,4 +897,7 @@ try{await deleteAttached("issueId",issueId)}catch(_){}
 if(window.LITHO){window.LITHO.renderPinPhotos=renderPinPhotos;window.LITHO.renderIssuePhotos=renderIssuePhotos}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
-</script></body></html>
+</script><style id="litho-final-more-photo">
+#settings .litho-more-architectural-photo{height:175px;margin:14px 0 17px;border-radius:13px;overflow:hidden;background:linear-gradient(0deg,rgba(37,27,20,.24),rgba(37,27,20,.05)),url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=900&q=80') center/cover no-repeat}
+#settings .litho-settings-heading{font-size:19px!important;font-weight:750!important;letter-spacing:-.03em!important;margin:22px 0 12px!important}
+</style></body></html>
