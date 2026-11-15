@@ -175,7 +175,7 @@ function action(label,name,id,cls="alt"){const b=node("button",label,"btn "+cls)
 function projectName(id){return state.projects.find(p=>p.id===id)?.title||"Χωρίς έργο"}
 function projectCard(p){
 const c=node("article",undefined,"card litho-project-row"),r=node("div",undefined,"litho-project-row-main"),left=node("div",undefined,"litho-project-row-info");
-const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");image.style.backgroundImage="url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=480&q=75')";image.dataset.projectId=p.id;if(window.LITHO?.attachProjectPhoto)queueMicrotask(()=>window.LITHO.attachProjectPhoto(image,p.id));
+const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");image.style.backgroundImage="url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=480&q=75')";image.dataset.projectId=p.id;if(window.LITHO?.attachProjectPhoto)queueMicrotask(()=>window.LITHO.attachProjectPhoto(image,p.id));
 const name=node("div",p.title,"item-title"),location=node("div",p.location||"Χωρίς τοποθεσία","sub");left.append(name,location);
 const status=node("div",p.status==="active"?"Σε εξέλιξη":p.status==="paused"?"Σε αναμονή":"Ολοκληρωμένο","litho-project-row-status");
 const pct=Math.max(0,Math.min(100,Number(p.progress)||0));const bar=node("div",undefined,"progress"),fill=node("span");fill.style.width=pct+"%";bar.append(fill);
@@ -451,7 +451,7 @@ body.litho-home-active>header .pill{background:#fff6!important;color:white!impor
 body.litho-home-active>header #menuToggle{border:0!important}
 body.litho-home-active main{padding-top:0!important}
 #home.editorial-home{margin:0 -16px!important;background:#f2e7db!important;min-height:100vh}
-#home .editorial-cover{position:relative!important;isolation:isolate!important;display:flex!important;align-items:center!important;overflow:hidden!important;width:100%!important;min-height:clamp(580px,77svh,840px)!important;padding:160px 26px 170px!important;color:white!important;background:#44342b linear-gradient(180deg,rgba(15,11,8,.58) 0%,rgba(27,19,14,.20) 45%,rgba(23,14,10,.44) 75%,rgba(39,26,19,.50) 100%),url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat!important;border-radius:0!important}
+#home .editorial-cover{position:relative!important;isolation:isolate!important;display:flex!important;align-items:center!important;overflow:hidden!important;width:100%!important;min-height:clamp(580px,77svh,840px)!important;padding:160px 26px 170px!important;color:white!important;background:#44342b linear-gradient(180deg,rgba(15,11,8,.58) 0%,rgba(27,19,14,.20) 45%,rgba(23,14,10,.44) 75%,rgba(39,26,19,.50) 100%),url('https://images.unsplash.com/photo-1762554720036-be145b4a2d6e?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat!important;border-radius:0!important}
 #home .editorial-cover:before{content:""!important;position:absolute!important;display:block!important;left:0!important;right:0!important;bottom:0!important;height:49%!important;background:linear-gradient(to bottom,#f2e7db00 0%,#f2e7db05 25%,#f2e7db70 68%,#f2e7db 100%)!important;z-index:0!important;pointer-events:none!important}
 #home .editorial-cover:after{display:none!important}
 #home .editorial-cover-art{display:none!important}
@@ -471,7 +471,7 @@ body.litho-home-active main{padding-top:0!important}
 #home .editorial-section-head h2{font-size:20px!important;font-weight:750!important;letter-spacing:-.05em!important;color:#211b17!important}
 #home .editorial-text-button{color:#985034!important}
 #home .editorial-recent{padding:0 17px!important}
-#home .editorial-recent .litho-project-row{min-height:205px!important;display:flex!important;align-items:flex-end!important;position:relative!important;background:#554339 linear-gradient(0deg,rgba(21,16,13,.86),rgba(21,16,13,.08)),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85') center/cover no-repeat!important;border:0!important;color:white!important;border-radius:18px!important;overflow:hidden!important;padding:16px!important}
+#home .editorial-recent .litho-project-row{min-height:205px!important;display:flex!important;align-items:flex-end!important;position:relative!important;background:#554339 linear-gradient(0deg,rgba(21,16,13,.86),rgba(21,16,13,.08)),url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85') center/cover no-repeat!important;border:0!important;color:white!important;border-radius:18px!important;overflow:hidden!important;padding:16px!important}
 #home .editorial-recent .litho-project-row-main{width:100%!important;align-items:flex-end!important}
 #home .editorial-recent .litho-project-row-image{display:none!important}
 #home .editorial-recent .litho-project-row-info .item-title{color:#fff!important;font-size:19px!important}
@@ -572,7 +572,7 @@ body.litho-home-active main{padding-top:0!important}
 .litho-note-excerpt{font-size:13px;line-height:1.55;color:#45392f;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .litho-note-meta{font-size:11px;color:#857467;border-top:1px solid #eadfd4;padding-top:10px}
 #notes .litho-note-open{margin-top:12px;background:#eee0d4!important;color:#663f2e!important}
-.litho-project-cover{height:205px;border-radius:14px;background:#d9cabc linear-gradient(0deg,#201a1430,transparent),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85') center/cover no-repeat;margin-bottom:18px}
+.litho-project-cover{height:205px;border-radius:14px;background:#d9cabc linear-gradient(0deg,#201a1430,transparent),url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85') center/cover no-repeat;margin-bottom:18px}
 #details #detailTitle{font-size:27px!important;margin:0 0 8px!important}
 #details #detailLocation{margin:0 0 13px!important;font-size:12px!important}
 .litho-project-detail-tabs{display:flex;gap:4px;padding:4px;background:#eee4d9;border-radius:11px;margin-bottom:14px;overflow:auto}
