@@ -579,4 +579,188 @@ nav button.active .litho-nav-label{color:white!important}
 @media(max-width:400px){header .litho-wordmark-name{font-size:24px!important}header .litho-wordmark-desc{font-size:8px!important}header .pill{display:none!important}body.litho-home-active>header{padding:23px 16px!important}#home .editorial-cover{min-height:590px!important;padding:145px 25px 170px!important}#home .editorial-quick-grid{margin-top:-125px!important}#home .editorial-quick-tile{min-height:132px!important;padding:14px!important}.litho-project-row-image{width:88px;height:100px}.litho-project-row-main{gap:8px}}
 @media(min-width:700px){main{max-width:760px!important}#home.editorial-home{margin:0 -16px!important}#home .editorial-cover{min-height:710px!important}#home .editorial-quick-grid{max-width:620px;margin-left:auto!important;margin-right:auto!important}#home .editorial-recent{max-width:720px;margin:0 auto}#home .editorial-section-head{max-width:720px;margin:auto}nav{left:50%!important;transform:translateX(-50%)!important;max-width:760px}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
-</style></body></html>
+</style><script id="litho-final-editorial-js">
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const pImages=new Map();
+const LITHO=window.LITHO={projectFilter:"all",detailTab:"general"};
+function log(message,ms){
+try{if(localStorage.getItem("litho_mobile_diagnostics_v1")!=="true")return;
+const key="litho_mobile_diagnostics_events_v1",entries=JSON.parse(localStorage.getItem(key)||"[]");
+entries.push({at:new Date().toISOString(),event:message,ms:Math.round(ms||0)});
+localStorage.setItem(key,JSON.stringify(entries.slice(-50)))}catch(_){}
+}
+const initStart=localStorage.getItem("litho_mobile_diagnostics_v1")==="true"?performance.now():0;
+function syncHome(){
+const home=$("home");if(!home)return;
+document.body.classList.toggle("litho-home-active",!home.hidden);
+}
+function show(tab){if(typeof switchTab==="function")switchTab(tab)}
+function iconMarkup(key){
+const paths={
+folder:'<path d="M3 5h6l2 2h10v12H3z"/>',
+crosshair:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/>',
+calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/>',
+check:'<rect x="3" y="3" width="18" height="18" rx="1"/><path d="m7 12 3 3 7-7"/>',
+dots:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+pin:'<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/>'
+};
+return '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[key]||paths.folder)+'</svg>';
+}
+function enhanceHome(){
+for(const [id,key] of [["heroProjects","folder"],["homeSite","crosshair"],["homeCalendar","calendar"],["homeNotes","check"]]){
+const el=$(id);if(!el)continue;const ico=el.querySelector(".eq-icon");if(ico)ico.innerHTML=iconMarkup(key);
+}
+}
+function enhanceNav(){
+const nav=document.querySelector("nav[aria-label='Main navigation']");if(!nav)return;
+const buttons={};for(const b of nav.querySelectorAll("button[data-tab]"))buttons[b.dataset.tab]=b;
+for(const [key,label] of [["home","Αρχική"],["projects","Έργα"],["site","Αυτοψία"],["calendar","Ημερολόγιο"]]){
+const btn=buttons[key];if(!btn)continue;nav.append(btn);
+const span=btn.querySelector(".litho-nav-label");if(span)span.textContent=label;
+}
+let more=nav.querySelector("button[data-tab='settings']");
+if(!more){more=document.createElement("button");more.type="button";more.dataset.tab="settings";more.setAttribute("aria-label","Περισσότερα");more.innerHTML=iconMarkup("dots")+'<span class="litho-nav-label">Περισσότερα</span>';more.addEventListener("click",()=>show("settings"));nav.append(more)}
+for(const b of nav.querySelectorAll("button")){if(b.dataset.tab==="site"){const svg=b.querySelector("svg");if(svg)svg.outerHTML=iconMarkup("pin")}}
+const mark=()=>{const visible=[...document.querySelectorAll("main>section")].find(s=>!s.hidden)?.id;const selected=visible==="details"?"projects":(["notes","gallery","tasks","settings"].includes(visible)?"settings":visible);
+for(const b of nav.querySelectorAll("button")){b.classList.toggle("active",b.dataset.tab===selected);if(b.dataset.tab===selected)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
+};
+new MutationObserver(mark).observe(document.querySelector("main"),{subtree:false,attributes:false,childList:false});
+const els=[...document.querySelectorAll("main>section")];for(const el of els)new MutationObserver(mark).observe(el,{attributes:true,attributeFilter:["hidden"]});mark();
+}
+function enhanceFilter(sectionId,filterId,options,change){
+const sec=$(sectionId),select=$(filterId);if(!sec||!select)return;
+const old=sec.querySelector(".litho-filter-bar");if(old)old.remove();
+const bar=document.createElement("div");bar.className="litho-filter-bar";bar.setAttribute("role","group");bar.setAttribute("aria-label","Φίλτρα");
+for(const [value,label] of options){
+const btn=document.createElement("button");btn.type="button";btn.textContent=label;btn.dataset.value=value;
+btn.addEventListener("click",()=>{change(value);for(const b of bar.children)b.setAttribute("aria-pressed",String(b===btn))});
+btn.setAttribute("aria-pressed",String(value===(sectionId==="projects"?LITHO.projectFilter:select.value)));bar.append(btn)
+}
+select.after(bar);
+}
+async function attachProjectPhoto(el,id,hero){
+if(!el||!id||!el.isConnected||typeof listPhotos!=="function")return;
+let pending=pImages.get(id);if(!pending){
+pending=listPhotos(id).then(items=>items.length?URL.createObjectURL(items[items.length-1].blob):null).catch(()=>null);
+pImages.set(id,pending)
+}
+const url=await pending;if(!url||!el.isConnected||el.dataset.projectId!==id)return;
+el.style.backgroundImage=(hero?"linear-gradient(0deg,rgba(18,13,10,.85),rgba(18,13,10,.05)),":"")+'url("'+url+'")';
+}
+LITHO.attachProjectPhoto=attachProjectPhoto;
+function setupPhotoRefresh(){
+const input=$("photoInput");
+if(input)input.addEventListener("change",()=>{for(const p of pImages.values())p.then(url=>{if(url)URL.revokeObjectURL(url)});pImages.clear()});
+}
+let detailPanels=null;
+function showDetailTab(name){
+LITHO.detailTab=name;
+if(!detailPanels)return;
+for(const [key,panel] of Object.entries(detailPanels))panel.hidden=key!==name;
+for(const btn of $("lithoProjectDetailTabs")?.querySelectorAll("button")||[])btn.setAttribute("aria-selected",String(btn.dataset.detailTab===name));
+}
+function initDetail(){
+const section=$("details"),tabs=$("lithoProjectDetailTabs");if(!section||!tabs)return;
+const cards=[...section.children].filter(el=>el.classList.contains("card"));
+const panels={};for(const name of ["general","tasks","documents","notes"]){const panel=document.createElement("div");panel.className="litho-detail-panel";panel.dataset.detailPanel=name;section.append(panel);panels[name]=panel}
+for(const card of cards){
+const title=(card.querySelector("h2")?.textContent||"").trim().toLowerCase();
+const key=title.includes("δικαιολογητ")?"documents":"general";
+panels[key].append(card)
+}
+const heading=(name,actionText,onClick)=>{
+const h=document.createElement("div");h.className="litho-panel-heading";const label=document.createElement("h2");label.textContent=name;
+const btn=document.createElement("button");btn.type="button";btn.textContent=actionText;btn.addEventListener("click",onClick);h.append(label,btn);return h
+};
+const acts=document.createElement("div");acts.className="litho-detail-quick-actions";
+for(const [glyph,label,fn] of [
+["▧","Φωτογραφίες",()=>{showDetailTab("general");const area=$("detailPhotos");if(area)area.scrollIntoView({behavior:"smooth",block:"center"})}],
+["⌖","Αυτοψία",()=>{show("site");const sel=$("siteProject");if(sel&&selectedProject){sel.value=selectedProject;showSiteView("drawings");renderSite()}}],
+["▤","Έγγραφα",()=>showDetailTab("documents")],
+["+","Εργασία",()=>{openEditor("task");const field=$("tProject");if(field&&selectedProject)field.value=selectedProject}]
+]){const b=document.createElement("button");b.type="button";b.innerHTML='<span>'+glyph+'</span><small>'+label+'</small>';b.addEventListener("click",fn);acts.append(b)}
+panels.general.prepend(acts);
+const tasksList=document.createElement("div");tasksList.id="lithoProjectTasks";
+panels.tasks.append(heading("Εργασίες έργου","+ Νέα",()=>{openEditor("task");if($("tProject"))$("tProject").value=selectedProject||""}),tasksList);
+const noteList=document.createElement("div");noteList.id="lithoProjectNotes";
+panels.notes.append(heading("Σημειώσεις έργου","+ Νέα",()=>{show("notes");openNote();if($("noteProject"))$("noteProject").value=selectedProject||""}),noteList);
+tabs.addEventListener("click",e=>{const button=e.target.closest("[data-detail-tab]");if(button)showDetailTab(button.dataset.detailTab)});
+detailPanels=panels;showDetailTab("general")
+}
+function refreshDetail(){
+if(!detailPanels||!selectedProject)return;
+const p=state.projects.find(x=>x.id===selectedProject);if(!p)return;
+const banner=$("lithoProjectCover");if(banner){banner.dataset.projectId=p.id;attachProjectPhoto(banner,p.id,true)}
+const taskList=$("lithoProjectTasks");if(taskList){
+taskList.replaceChildren();const tasks=state.tasks.filter(t=>t.projectId===selectedProject);
+if(tasks.length){for(const t of tasks)taskList.append(taskCard(t))}
+else{const empty=document.createElement("div");empty.className="litho-panel-empty";empty.textContent="Δεν υπάρχουν ακόμη εργασίες για το έργο.";taskList.append(empty)}
+}
+const noteList=$("lithoProjectNotes");if(noteList){
+noteList.replaceChildren();const notes=(state.notes||[]).filter(n=>n.projectId===selectedProject);
+if(notes.length){for(const n of notes){
+const button=document.createElement("button");button.type="button";button.className="litho-more-item";
+const label=document.createElement("span");const title=document.createElement("strong");title.textContent=n.title;
+const sub=document.createElement("small");sub.textContent=n.category||"Σημείωση";label.append(title,sub);
+button.append(label);button.addEventListener("click",()=>{show("notes");openNote(n.id)});noteList.append(button)
+}}
+else{const empty=document.createElement("div");empty.className="litho-panel-empty";empty.textContent="Δεν υπάρχουν ακόμη σημειώσεις για το έργο.";noteList.append(empty)}
+}
+}
+LITHO.refreshDetail=refreshDetail;
+function initSiteTabs(){
+const site=$("site"),workspace=$("oldSiteWorkspace");if(!site||!workspace)return;
+const old=site.querySelector("#oldSiteHome .litho-inspection-tabs");if(old)old.remove();
+let bar=workspace.querySelector(".litho-site-workspace-tabs");if(bar)bar.remove();
+bar=document.createElement("div");bar.className="litho-site-workspace-tabs";bar.setAttribute("role","tablist");bar.setAttribute("aria-label","Προβολή αυτοψίας");
+for(const [name,view] of [["Σχέδιο","drawings"],["Λίστα","issues"],["Φωτογραφίες","photos"]]){
+const b=document.createElement("button");b.type="button";b.textContent=name;b.dataset.siteTarget=view;b.setAttribute("role","tab");
+b.addEventListener("click",()=>{if(typeof showSiteView==="function")showSiteView(view);sync()});bar.append(b)
+}
+function sync(){
+const visible=Array.from(workspace.querySelectorAll(".old-site-panel")).find(x=>!x.hidden);
+const active=visible?.dataset.sitePanel||"drawings";
+for(const btn of bar.children)btn.setAttribute("aria-selected",String(btn.dataset.siteTarget===active));
+}
+const title=$("siteWorkspaceTitle");if(title)title.after(bar);
+for(const panel of workspace.querySelectorAll(".old-site-panel"))new MutationObserver(sync).observe(panel,{attributes:true,attributeFilter:["hidden"]});
+sync();
+site.querySelector("#siteProject")?.addEventListener("change",()=>{if(typeof renderSite==="function")renderSite()});
+}
+function initMore(){
+const settings=$("settings");if(!settings)return;
+let list=settings.querySelector(".litho-more-list");if(list)list.remove();
+list=document.createElement("div");list.className="litho-more-list";
+for(const [icon,title,description,target] of [
+["▧","Φωτογραφίες","Συλλογή έργων και εργοταξίων","gallery"],
+["▤","Έγγραφα","Δικαιολογητικά μέσα στους φακέλους έργων","projects"],
+["▣","Σημειώσεις","Παρατηρήσεις και τεχνικές σημειώσεις","notes"],
+["☑","Εκκρεμότητες","Εργασίες και προθεσμίες","tasks"]]){
+const b=document.createElement("button");b.type="button";b.className="litho-more-item";
+const i=document.createElement("span");i.className="litho-more-icon";i.textContent=icon;
+const t=document.createElement("span"),strong=document.createElement("strong"),small=document.createElement("small");strong.textContent=title;small.textContent=description;t.append(strong,small);
+const arrow=document.createElement("span");arrow.className="litho-more-arrow";arrow.textContent="›";b.append(i,t,arrow);b.addEventListener("click",()=>show(target));list.append(b)
+}
+settings.querySelector("h1")?.after(list);
+}
+function initApp(){
+syncHome();new MutationObserver(syncHome).observe($("home"),{attributes:true,attributeFilter:["hidden"]});
+enhanceHome();enhanceNav();
+enhanceFilter("projects","projectSearch",[["all","Όλα"],["active","Σε εξέλιξη"],["done","Ολοκληρωμένα"]],v=>{LITHO.projectFilter=v;render()});
+enhanceFilter("tasks","taskFilter",[["all","Όλες"],["open","Εκκρεμείς"],["done","Ολοκληρωμένες"]],v=>{const sel=$("taskFilter");sel.value=v;sel.dispatchEvent(new Event("change",{bubbles:true}))});
+initDetail();initSiteTabs();initMore();setupPhotoRefresh();
+if(state.projects.length===1){const siteProject=$("siteProject");if(siteProject&&!siteProject.value)siteProject.value=state.projects[0].id}
+render();log("editorial_ui_initialized",initStart?performance.now()-initStart:0);
+}
+LITHO.selfTest=()=>{
+const ids=["home","projects","site","calendar","notes","tasks","gallery","settings","details","drawingDialog","drawingPreview","siteDrawings","siteDrawingUpload","lithoProjectDetailTabs","lithoProjectCover","lithoProjectTasks","lithoProjectNotes","siteProject","photoInput","export","import","diagnosticsEnabled"];
+const missing=ids.filter(id=>!$(id));
+const requiredFunctions=[typeof render,typeof renderSite,typeof renderDrawings,typeof renderDrawingPins,typeof openDrawing,typeof renderDetails,typeof openEditor];
+return {passed:missing.length===0&&requiredFunctions.every(x=>x==="function")&&document.querySelectorAll("nav button").length===5,missing,functionsOk:requiredFunctions.every(x=>x==="function"),navItems:document.querySelectorAll("nav button").length,projectCount:state.projects.length,ts:new Date().toISOString()}
+};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initApp,{once:true});else initApp();
+if(new URLSearchParams(location.search).has("lithoTest")){const print=()=>{const result=LITHO.selfTest();const pre=document.createElement("pre");pre.style.cssText="position:fixed;top:45px;left:5px;right:5px;z-index:99999;padding:12px;background:white;color:black;white-space:pre-wrap;font-size:12px";pre.textContent=JSON.stringify(result,null,2);document.body.append(pre)};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",print,{once:true});else print()}
+})();
+</script></body></html>
