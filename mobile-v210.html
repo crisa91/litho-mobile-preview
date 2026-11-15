@@ -165,14 +165,14 @@ function action(label,name,id,cls="alt"){const b=node("button",label,"btn "+cls)
 function projectName(id){return state.projects.find(p=>p.id===id)?.title||"Χωρίς έργο"}
 function projectCard(p){
 const c=node("article",undefined,"card litho-project-row"),r=node("div",undefined,"litho-project-row-main"),left=node("div",undefined,"litho-project-row-info");
-const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");image.style.backgroundImage="url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=480&q=75')";image.dataset.projectId=p.id;if(window.LITHO?.attachProjectPhoto)window.LITHO.attachProjectPhoto(image,p.id);
+const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");image.style.backgroundImage="url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=480&q=75')";image.dataset.projectId=p.id;if(window.LITHO?.attachProjectPhoto)queueMicrotask(()=>window.LITHO.attachProjectPhoto(image,p.id));
 const name=node("div",p.title,"item-title"),location=node("div",p.location||"Χωρίς τοποθεσία","sub");left.append(name,location);
 const status=node("div",p.status==="active"?"Σε εξέλιξη":p.status==="paused"?"Σε αναμονή":"Ολοκληρωμένο","litho-project-row-status");
 const pct=Math.max(0,Math.min(100,Number(p.progress)||0));const bar=node("div",undefined,"progress"),fill=node("span");fill.style.width=pct+"%";bar.append(fill);
 const meter=node("div",undefined,"litho-project-meter");meter.append(bar,node("span",pct+"%","litho-project-pct"));
 left.append(status,meter);
 const open=action("›","open-project",p.id,"alt");open.classList.add("litho-project-open");open.setAttribute("aria-label","Άνοιγμα έργου "+p.title);
-r.append(image,left,open);c.append(r);if(window.LITHO?.attachProjectPhoto&&document.getElementById("recent")){c.dataset.projectId=p.id;window.LITHO.attachProjectPhoto(c,p.id,true)}return c}
+r.append(image,left,open);c.append(r);if(window.LITHO?.attachProjectPhoto&&document.getElementById("recent")){c.dataset.projectId=p.id;queueMicrotask(()=>window.LITHO.attachProjectPhoto(c,p.id,true))}return c}
 
 function taskCard(t){
 const c=node("article",undefined,"card litho-task-row"+(t.done?" is-done":""));
@@ -626,7 +626,7 @@ for(const b of nav.querySelectorAll("button")){if(b.dataset.tab==="site"){const 
 const mark=()=>{const visible=[...document.querySelectorAll("main>section")].find(s=>!s.hidden)?.id;const selected=visible==="details"?"projects":(["notes","gallery","tasks","settings"].includes(visible)?"settings":visible);
 for(const b of nav.querySelectorAll("button")){b.classList.toggle("active",b.dataset.tab===selected);if(b.dataset.tab===selected)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
 };
-new MutationObserver(mark).observe(document.querySelector("main"),{subtree:false,attributes:false,childList:false});
+
 const els=[...document.querySelectorAll("main>section")];for(const el of els)new MutationObserver(mark).observe(el,{attributes:true,attributeFilter:["hidden"]});mark();
 }
 function enhanceFilter(sectionId,filterId,options,change){
@@ -647,7 +647,7 @@ pending=listPhotos(id).then(items=>items.length?URL.createObjectURL(items[items.
 pImages.set(id,pending)
 }
 const url=await pending;if(!url||!el.isConnected||el.dataset.projectId!==id)return;
-el.style.backgroundImage=(hero?"linear-gradient(0deg,rgba(18,13,10,.85),rgba(18,13,10,.05)),":"")+'url("'+url+'")';
+el.style.setProperty("background-image",(hero?"linear-gradient(0deg,rgba(18,13,10,.85),rgba(18,13,10,.05)),":"")+'url("'+url+'")',"important");
 }
 LITHO.attachProjectPhoto=attachProjectPhoto;
 function setupPhotoRefresh(){
