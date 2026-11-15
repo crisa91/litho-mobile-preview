@@ -135,7 +135,7 @@ nav button.active svg{stroke:#fff}
 #home.editorial-home:before{display:none!important}
 @media(max-width:480px){#home .editorial-cover{min-height:68svh!important;background-position:51% center!important;padding:32px 25px 100px!important}}
 </style></head><body>
-<header><div class="brand-row"><button id="appBack" class="menu-toggle" aria-label="Πίσω" title="Πίσω"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><strong>LITHO</strong><small>ARCHITECTURE · MOBILE</small></div></div><div class="header-actions"><span class="pill">LOCAL · v2.10</span><button id="menuToggle" class="menu-toggle" aria-label="Άνοιγμα μενού" aria-controls="sideMenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header><div id="menuOverlay" class="menu-overlay" hidden></div><aside id="sideMenu" class="side-menu" aria-label="Πρόσθετες ενότητες" aria-hidden="true"><div class="row"><h2>Μενού LITHO</h2><button class="btn alt" id="menuClose" aria-label="Κλείσιμο μενού">✕</button></div><button data-menu-tab="tasks">☑ Εργασίες</button><button data-menu-tab="notes">✎ Σημειώσεις</button><button data-menu-tab="gallery">▧ Φωτογραφίες</button><button data-menu-tab="settings">⚙ Ρυθμίσεις</button></aside>
+<header><div class="brand-row"><button id="appBack" class="menu-toggle" aria-label="Πίσω" title="Πίσω"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div class="litho-wordmark" aria-label="LITHO Architecture"><span class="litho-wordmark-name">LITHO</span><span class="litho-wordmark-desc">ARCHITECTURE</span></div></div><div class="header-actions"><span class="pill">LOCAL · v2.10</span><button id="menuToggle" class="menu-toggle" aria-label="Άνοιγμα μενού" aria-controls="sideMenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header><div id="menuOverlay" class="menu-overlay" hidden></div><aside id="sideMenu" class="side-menu" aria-label="Πρόσθετες ενότητες" aria-hidden="true"><div class="row"><h2>Μενού LITHO</h2><button class="btn alt" id="menuClose" aria-label="Κλείσιμο μενού">✕</button></div><button data-menu-tab="tasks">☑ Εργασίες</button><button data-menu-tab="notes">✎ Σημειώσεις</button><button data-menu-tab="gallery">▧ Φωτογραφίες</button><button data-menu-tab="settings">⚙ Ρυθμίσεις</button></aside>
 <main>
 <section id="home" class="editorial-home">
 <div class="editorial-cover"><div class="editorial-cover-art" aria-hidden="true"><div class="arch-outer"><div class="arch-inner"></div></div><div class="arch-shadow"></div></div><div class="editorial-cover-content"><div class="eyebrow">LITHO / WORKSPACE</div><h1>Το γραφείο σου,<br>παντού.</h1><div class="editorial-rule"></div><p>Αρχιτεκτονική, οργάνωση και εργοτάξιο.<br>Όλα στον χώρο σου.</p></div></div>
@@ -433,4 +433,30 @@ body.litho-home-active main{padding-top:0!important}
 #home .editorial-recent .card .progress{background:#ffffff60!important}
 #home .editorial-recent .card .progress span{background:#c27a55!important}
 @media(max-width:480px){#home .editorial-cover{min-height:80svh!important;padding:140px 27px 160px!important}#home .editorial-quick-grid{margin-top:-130px!important}body.litho-home-active>header{padding:22px 24px!important}}
-</style><script id="litho-home-visibility-sync">(function(){const h=document.getElementById('home');if(!h)return;const sync=()=>document.body.classList.toggle('litho-home-active',!h.hidden);sync();new MutationObserver(sync).observe(h,{attributes:true,attributeFilter:['hidden']});})();</script></body></html>
+</style><script id="litho-home-visibility-sync">(function(){const h=document.getElementById('home');if(!h)return;const sync=()=>document.body.classList.toggle('litho-home-active',!h.hidden);sync();new MutationObserver(sync).observe(h,{attributes:true,attributeFilter:['hidden']});})();</script><style id="litho-brand-and-layout-v5">
+/* Wordmark follows the supplied business-card brand: heavy geometric LITHO + fine spaced ARCHITECTURE */
+header .litho-wordmark{display:flex;align-items:baseline;gap:7px;white-space:nowrap;max-width:100%}
+header .litho-wordmark-name{font-family:Arial,Helvetica,sans-serif;font-size:clamp(24px,7vw,36px);font-weight:800;letter-spacing:-.065em;line-height:1;color:#71635f}
+header .litho-wordmark-desc{font-family:Arial,Helvetica,sans-serif;font-size:clamp(8px,2.35vw,12px);font-weight:500;letter-spacing:.12em;line-height:1;color:#282321}
+body.litho-home-active>header .litho-wordmark-name,body.litho-home-active>header .litho-wordmark-desc{color:#fff!important;text-shadow:0 1px 12px #0008}
+body.litho-home-active>header{background:transparent!important;position:absolute!important;top:0!important;left:0!important;right:0!important;padding:calc(26px + env(safe-area-inset-top)) 20px 15px!important;z-index:25!important}
+body.litho-home-active>header .brand-row{min-width:0}
+body.litho-home-active>header .header-actions{gap:8px}
+body.litho-home-active>header .pill{display:none!important}
+body.litho-home-active>header #menuToggle{border:0!important;background:#a15a3a!important;border-radius:12px!important;width:42px;height:42px}
+#home.editorial-home{background:#f1e6da!important}
+#home .editorial-cover{height:calc(100svh - 76px)!important;min-height:600px!important;max-height:950px!important;align-items:center!important;padding:100px 25px 160px!important;background:linear-gradient(180deg,#1d1712a6 0%,#1d17121c 33%,#1d171236 65%,#1d1712ba 100%),url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat!important}
+#home .editorial-cover-content{max-width:340px!important;margin-top:15px!important;align-self:center!important}
+#home .editorial-cover .eyebrow{font-size:10px!important;letter-spacing:.25em!important}
+#home .editorial-cover h1{font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(31px,8vw,44px)!important;font-weight:550!important;letter-spacing:-.045em!important;line-height:1.16!important}
+#home .editorial-cover p{font-size:13px!important;line-height:1.55!important}
+#home .editorial-quick-grid{margin-top:-150px!important;padding:0 16px 16px!important;gap:9px!important}
+#home .editorial-quick-tile{min-height:134px!important;border-radius:16px!important;padding:17px!important;background:#faf4ec!important;box-shadow:0 12px 30px #2d1c1250!important}
+#home .editorial-quick-tile.accent{background:#a35c3e!important;color:white!important}
+#home .editorial-quick-tile .eq-icon{font-size:23px!important}
+#home .editorial-quick-tile strong{font-family:Arial,Helvetica,sans-serif!important;font-size:31px!important;font-weight:600!important}
+#home .editorial-section-head h2{font-family:Arial,Helvetica,sans-serif!important;font-size:19px!important;font-weight:700!important}
+#home .editorial-recent{padding:0 16px!important}
+#home .editorial-recent .card{border-radius:16px!important}
+@media(max-width:390px){header .litho-wordmark-name{font-size:26px}header .litho-wordmark-desc{font-size:9px}body.litho-home-active>header{padding-left:16px!important;padding-right:16px!important}#home .editorial-cover{min-height:560px!important}#home .editorial-quick-grid{margin-top:-125px!important}}
+</style></body></html>
