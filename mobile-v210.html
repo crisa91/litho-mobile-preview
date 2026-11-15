@@ -172,7 +172,7 @@ const pct=Math.max(0,Math.min(100,Number(p.progress)||0));const bar=node("div",u
 const meter=node("div",undefined,"litho-project-meter");meter.append(bar,node("span",pct+"%","litho-project-pct"));
 left.append(status,meter);
 const open=action("›","open-project",p.id,"alt");open.classList.add("litho-project-open");open.setAttribute("aria-label","Άνοιγμα έργου "+p.title);
-r.append(image,left,open);c.append(r);if(window.LITHO?.attachProjectPhoto&&document.getElementById("recent")){c.dataset.projectId=p.id;queueMicrotask(()=>window.LITHO.attachProjectPhoto(c,p.id,true))}return c}
+r.append(image,left,open);c.append(r);if(window.LITHO?.attachProjectPhoto){c.dataset.projectId=p.id;queueMicrotask(()=>{if(c.closest("#recent"))window.LITHO.attachProjectPhoto(c,p.id,true)})}return c}
 
 function taskCard(t){
 const c=node("article",undefined,"card litho-task-row"+(t.done?" is-done":""));
@@ -228,7 +228,7 @@ $("newNote").addEventListener("click",()=>openNote());$("notesSearch").addEventL
 document.addEventListener("click",e=>{const b=e.target.closest('[data-action="edit-note"]');if(b)openNote(b.dataset.id)});
 $("noteForm").addEventListener("submit",e=>{e.preventDefault();const title=$("noteTitle").value.trim(),body=$("noteBody").value.trim();if(!title||!body)return;const id=$("noteForm").dataset.id,arr=notesArray(),n=arr.find(x=>x.id===id),data={title,body,category:$("noteCategory").value,projectId:$("noteProject").value,pinned:$("notePinned").checked,updated:new Date().toISOString()};if(n)Object.assign(n,data);else arr.push({id:crypto.randomUUID(),...data});if(save()){$("noteDialog").close();renderNotes()}});
 $("noteDelete").addEventListener("click",()=>{const id=$("noteForm").dataset.id;if(!confirm("Να διαγραφεί η σημείωση;"))return;state.notes=notesArray().filter(x=>x.id!==id);if(save()){$("noteDialog").close();renderNotes()}});
-$("homeGallery").addEventListener("click",()=>switchTab("gallery"));$("homeCalendar").addEventListener("click",()=>switchTab("calendar"));$("homeSite").addEventListener("click",()=>switchTab("site"));$("homeNotes").addEventListener("click",()=>switchTab("notes"));
+$("homeGallery").addEventListener("click",()=>switchTab("gallery"));$("homeCalendar").addEventListener("click",()=>switchTab("calendar"));$("homeSite").addEventListener("click",()=>switchTab("site"));$("homeNotes").addEventListener("click",()=>switchTab("tasks"));
 $("siteProject").addEventListener("change",renderSite);$("siteGallery").addEventListener("click",()=>switchTab("gallery"));
 $("siteNew").addEventListener("click",()=>{const projectId=$("siteProject").value;if(!projectId){alert("Επίλεξε πρώτα έργο.");return}selectedProject=projectId;openProject(projectId);const b=document.querySelector('#details [data-record="events"]');if(b)b.click()});
 let siteView="home",siteIssueFilter="all";
