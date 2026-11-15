@@ -731,7 +731,7 @@ detailPanels=panels;showDetailTab("general")
 function refreshDetail(){
 if(!detailPanels||!selectedProject)return;
 const p=state.projects.find(x=>x.id===selectedProject);if(!p)return;
-const banner=$("lithoProjectCover");if(banner){banner.dataset.projectId=p.id;attachProjectPhoto(banner,p.id,true)}
+const banner=$("lithoProjectCover");if(banner){banner.dataset.projectId=p.id;const photos=["photo-1600585154340-be6161a56a0c","photo-1600607687920-4e2a09cf159d","photo-1600607687939-ce8a6c25118c","photo-1487958449943-2429e8be8625"];const hash=Array.from(String(p.id)).reduce((n,c)=>(n*33+c.charCodeAt(0))>>>0,7);banner.style.setProperty("background-image","linear-gradient(0deg,rgba(35,22,14,.12),transparent),url('https://images.unsplash.com/"+photos[hash%photos.length]+"?auto=format&fit=crop&w=1200&q=85')","important");attachProjectPhoto(banner,p.id,true)}
 const taskList=$("lithoProjectTasks");if(taskList){
 taskList.replaceChildren();const tasks=state.tasks.filter(t=>t.projectId===selectedProject);
 if(tasks.length){for(const t of tasks)taskList.append(taskCard(t))}
@@ -798,7 +798,7 @@ if(state.projects.length===1){const siteProject=$("siteProject");if(siteProject&
 render();log("editorial_ui_initialized",initStart?performance.now()-initStart:0);
 }
 LITHO.selfTest=()=>{
-const ids=["home","projects","site","calendar","notes","tasks","gallery","settings","details","drawingDialog","drawingPreview","siteDrawings","siteDrawingUpload","lithoProjectDetailTabs","lithoProjectCover","lithoProjectTasks","lithoProjectNotes","siteProject","photoInput","export","import","diagnosticsEnabled"];
+const ids=["home","projects","site","calendar","notes","tasks","gallery","settings","suppliers","lithoSupplierDialog","lithoSupplierList","details","drawingDialog","drawingPreview","siteDrawings","siteDrawingUpload","lithoProjectDetailTabs","lithoProjectCover","lithoProjectTasks","lithoProjectNotes","siteProject","photoInput","export","import","diagnosticsEnabled"];
 const missing=ids.filter(id=>!$(id));
 const requiredFunctions=[typeof render,typeof renderSite,typeof renderDrawings,typeof renderDrawingPins,typeof openDrawing,typeof renderDetails,typeof openEditor];
 return {passed:missing.length===0&&requiredFunctions.every(x=>x==="function")&&document.querySelectorAll("nav button").length===5,missing,functionsOk:requiredFunctions.every(x=>x==="function"),navItems:document.querySelectorAll("nav button").length,projectCount:state.projects.length,ts:new Date().toISOString()}
@@ -1131,4 +1131,10 @@ body:not([data-litho-page="site"]):not([data-litho-page="details"]) header #appB
 #lithoPinEditor .litho-pin-meta-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
 #lithoPinEditor .litho-pin-photo-strip{margin:6px 0 15px!important}
 #projects #projectList>.litho-project-row .litho-project-controls{min-width:24px}
+</style><style id="litho-final-consistency-v15">
+body.litho-home-active header .pill{display:inline-flex!important;align-items:center!important;background:#ffffff40!important;color:#fff!important;font-size:9px!important;letter-spacing:.025em!important;border-radius:14px!important;padding:5px 7px!important;white-space:nowrap!important;backdrop-filter:blur(6px)}
+#home .editorial-quick-tile:active,#projects .litho-project-row:active,#tasks .litho-task-row:active{transform:scale(.99)}
+#details #lithoProjectCover{background-size:cover!important;background-position:center!important}
+#lithoPinEditor #lithoPinPhotoStrip img{display:block!important}
+@media(max-width:355px){body.litho-home-active header .pill{font-size:8px!important;padding:4px 5px!important}header .litho-wordmark-name{font-size:20px!important}}
 </style></body></html>
