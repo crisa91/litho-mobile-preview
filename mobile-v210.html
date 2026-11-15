@@ -175,7 +175,7 @@ function action(label,name,id,cls="alt"){const b=node("button",label,"btn "+cls)
 function projectName(id){return state.projects.find(p=>p.id===id)?.title||"Χωρίς έργο"}
 function projectCard(p){
 const c=node("article",undefined,"card litho-project-row"),r=node("div",undefined,"litho-project-row-main"),left=node("div",undefined,"litho-project-row-info");
-const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");image.style.backgroundImage="url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=480&q=75')";image.dataset.projectId=p.id;if(window.LITHO?.attachProjectPhoto)queueMicrotask(()=>window.LITHO.attachProjectPhoto(image,p.id));
+const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");const fallbackPhotos=["photo-1600585154340-be6161a56a0c","photo-1600607687920-4e2a09cf159d","photo-1600607687939-ce8a6c25118c","photo-1487958449943-2429e8be8625"];const photoHash=Array.from(String(p.id)).reduce((n,ch)=>(n*33+ch.charCodeAt(0))>>>0,7);image.style.backgroundImage="url('https://images.unsplash.com/"+fallbackPhotos[photoHash%fallbackPhotos.length]+"?auto=format&fit=crop&w=480&q=75')";image.dataset.projectId=p.id;if(window.LITHO?.attachProjectPhoto)queueMicrotask(()=>window.LITHO.attachProjectPhoto(image,p.id));
 const name=node("div",p.title,"item-title"),location=node("div",p.location||"Χωρίς τοποθεσία","sub");left.append(name,location);
 const status=node("div",p.status==="active"?"Σε εξέλιξη":p.status==="paused"?"Σε αναμονή":"Ολοκληρωμένο","litho-project-row-status");
 const pct=Math.max(0,Math.min(100,Number(p.progress)||0));const bar=node("div",undefined,"progress"),fill=node("span");fill.style.width=pct+"%";bar.append(fill);
@@ -337,7 +337,7 @@ for(const [pinIdx,pin] of (item.pins||[]).entries()){
 const point=node("button",pinIdx+1,"litho-preview-pin"+(pin.status==="resolved"?" resolved":""));point.type="button";
 point.dataset.x=String(pin.x);point.dataset.y=String(pin.y);
 point.title=pin.title;point.setAttribute("aria-label","Επισήμανση "+(pinIdx+1)+": "+pin.title);
-point.addEventListener("click",()=>openDrawing(item));preview.append(point);lithoPlacePin(point,pin,preview)
+point.addEventListener("click",()=>{activeDrawing=item;editDrawingPin(pinIdx)});preview.append(point);lithoPlacePin(point,pin,preview)
 }}
 const open=node("button","⤢","litho-plan-expand");open.type="button";open.setAttribute("aria-label","Άνοιγμα σχεδίου "+item.name);open.addEventListener("click",()=>openDrawing(item));preview.append(open);card.append(preview);
 const footer=node("div",undefined,"litho-drawing-info"),n=node("div");n.append(node("strong",item.name),node("small",projectName(item.projectId)+" · "+(item.pins||[]).length+" παρατηρήσεις"));
@@ -345,7 +345,7 @@ const btn=node("button","Άνοιγμα →","litho-drawing-open");btn.type="but
 if(index===0 && item.pins?.length){
 const pinList=node("div",undefined,"litho-preview-issues");
 for(const [pinIdx,pin] of item.pins.entries()){
-const issue=node("button",undefined,"litho-preview-issue");issue.type="button";issue.append(node("span","#"+(pinIdx+1),"litho-issue-number"),node("span",pin.title,"litho-issue-title"),node("span",pin.status==="resolved"?"✓":"›","litho-issue-status"));issue.addEventListener("click",()=>openDrawing(item));pinList.append(issue)}card.append(pinList)}
+const issue=node("button",undefined,"litho-preview-issue");issue.type="button";issue.append(node("span","#"+(pinIdx+1),"litho-issue-number"),node("span",pin.title,"litho-issue-title"),node("span",pin.status==="resolved"?"✓":"›","litho-issue-status"));issue.addEventListener("click",()=>{activeDrawing=item;editDrawingPin(pinIdx)});pinList.append(issue)}card.append(pinList)}
 box.append(card)
 }
 }catch(e){box.replaceChildren(node("p",appLang==="en"?"Drawing storage unavailable.":"Η αποθήκευση σχεδίων δεν είναι διαθέσιμη.","muted"))}
@@ -975,7 +975,7 @@ body.litho-home-active header .litho-top-search,body.litho-home-active header .l
 #calendar #calEntries{background:#fff9f3!important;border-radius:12px!important;padding:5px 11px!important}
 #calendar #newCalendar{display:none!important}
 .litho-calendar-float{position:sticky;z-index:7;bottom:90px;margin:0 0 0 auto;width:45px;height:45px;border:0;border-radius:50%;background:#a65534;color:white;font-size:26px;box-shadow:0 5px 16px #5e361f50}
-#site #oldSiteHome{display:none!important}
+ #site #oldSiteHome[hidden]{display:none!important}
 #site #oldSiteWorkspace{padding:0 0 30px!important}
 #site #siteWorkspaceTitle{font-size:21px!important;margin:0 0 6px!important;letter-spacing:-.05em!important}
 #site .litho-site-workspace-tabs{border-radius:10px!important;padding:3px!important;gap:5px!important;background:#f0e5da!important}
@@ -1014,11 +1014,22 @@ const header=document.querySelector("body>header");if(!header||header.querySelec
 const search=document.createElement("button");search.className="litho-top-search";search.type="button";search.title="Αναζήτηση";search.setAttribute("aria-label","Αναζήτηση");search.textContent="⌕";
 const plus=document.createElement("button");plus.className="litho-top-add";plus.type="button";plus.title="Προσθήκη";plus.setAttribute("aria-label","Προσθήκη");plus.textContent="+";
 const actions=header.querySelector(".header-actions");actions.prepend(search,plus);
+const contextual=document.createElement("div");contextual.className="litho-contextual-title";contextual.hidden=true;
+const contextTitle=document.createElement("strong");const contextSub=document.createElement("small");contextual.append(contextTitle,contextSub);header.querySelector(".brand-row")?.append(contextual);
+const more=document.createElement("button");more.type="button";more.className="litho-top-more";more.setAttribute("aria-label","Επιλογές");more.textContent="⋮";more.hidden=true;more.addEventListener("click",()=>byId("menuToggle")?.click());actions.append(more);
 const route=()=>[...document.querySelectorAll("main>section")].find(s=>!s.hidden)?.id||"home";
 search.addEventListener("click",()=>{const tab=route();if(tab!=="projects")document.querySelector('nav [data-tab="projects"]')?.click();const field=byId("projectSearch");field?.focus();field?.scrollIntoView({block:"center"})});
 plus.addEventListener("click",()=>{const t=route();const ids={tasks:'[data-action="new-task"]',calendar:"#newCalendar",site:"#siteDrawingUpload",details:"#detailEdit"};const target=document.querySelector(ids[t]||'[data-action="new-project"]');target?.click()});
-function sync(){const tab=route();const isProjects=tab==="projects";search.hidden=!isProjects;plus.hidden=!["projects","tasks"].includes(tab);document.body.dataset.lithoPage=tab}
-for(const sec of document.querySelectorAll("main>section"))new MutationObserver(sync).observe(sec,{attributes:true,attributeFilter:["hidden"]});sync();
+function sync(){
+const tab=route(),isProjects=tab==="projects",context=["site","details"].includes(tab);
+search.hidden=!isProjects;plus.hidden=!["projects","tasks"].includes(tab);more.hidden=!context;contextual.hidden=!context;
+document.body.dataset.lithoPage=tab;
+if(tab==="site"){contextTitle.textContent="Αυτοψία εργοταξίου";const sel=byId("siteProject");contextSub.textContent=sel?.selectedOptions?.[0]?.textContent?.trim()||"Site Manager"}
+if(tab==="details"){contextTitle.textContent=byId("detailTitle")?.textContent||"Καρτέλα έργου";contextSub.textContent=byId("detailLocation")?.textContent||"LITHO PROJECT"}
+}
+for(const sec of document.querySelectorAll("main>section"))new MutationObserver(sync).observe(sec,{attributes:true,attributeFilter:["hidden"]});
+for(const id of ["detailTitle","detailLocation"])if(byId(id))new MutationObserver(sync).observe(byId(id),{childList:true,characterData:true,subtree:true});
+byId("siteProject")?.addEventListener("change",sync);sync();
 }
 function setupFloating(){
 const calendar=byId("calendar");if(calendar&&!calendar.querySelector(".litho-calendar-float")){const b=document.createElement("button");b.type="button";b.className="litho-calendar-float";b.textContent="+";b.setAttribute("aria-label","Νέα εγγραφή ημερολογίου");b.addEventListener("click",()=>byId("newCalendar")?.click());const last=calendar.querySelector("#calWaiting")?.closest(".card");if(last)last.before(b);else calendar.append(b)}
@@ -1065,4 +1076,19 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 #lithoSupplierDialog .btn{background:#a65534;color:white;border:0;border-radius:9px;padding:10px}
 #lithoSupplierDialog .btn.alt{background:#eee0d3;color:#403126}
 #lithoSupplierDialog .btn.danger{background:#f4dcd2;color:#7e3020}
+</style><style id="litho-context-header-v13">
+.litho-contextual-title{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;line-height:1.1}
+.litho-contextual-title strong{display:block;font-size:15px!important;font-weight:800!important;letter-spacing:-.035em!important;max-width:215px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.litho-contextual-title small{display:block;font-size:10px!important;color:#74665d!important;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.litho-contextual-title[hidden]{display:none!important}
+body[data-litho-page="site"] header .litho-wordmark,body[data-litho-page="details"] header .litho-wordmark{display:none!important}
+header .litho-top-more{background:transparent;border:0;width:34px;height:35px;font-size:25px;color:#312821}
+header .litho-top-more[hidden]{display:none!important}
+body[data-litho-page="site"] header #appBack,body[data-litho-page="details"] header #appBack{width:27px!important;height:36px!important;display:grid!important;place-items:center!important;padding:0!important}
+body[data-litho-page="site"] #siteWorkspaceTitle{display:none!important}
+body[data-litho-page="details"] #detailTitle{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(100%)!important;white-space:nowrap!important}
+body[data-litho-page="details"] #detailLocation{font-size:11px!important;margin:0 0 12px!important}
+#projects .litho-project-controls{display:flex!important;flex-direction:column!important;justify-content:space-between!important;align-self:stretch!important}
+#site #oldSiteHome:not([hidden]){display:block!important}
+#site .litho-preview-pin:focus-visible,#drawingDialog .drawing-pin:focus-visible{outline:3px solid #a65534!important;outline-offset:3px!important}
 </style></body></html>
