@@ -201,7 +201,20 @@ $("calDelete").addEventListener("click",()=>{const id=$("calendarForm").dataset.
 
 const notesArray=()=>Array.isArray(state.notes)?state.notes:(state.notes=[]);
 function projectSelect(select,withAll=false){const prev=select.value;select.replaceChildren();const none=node("option",withAll?"Όλα τα έργα":"Χωρίς έργο");none.value="";select.append(none);for(const p of state.projects){const opt=node("option",p.title);opt.value=p.id;select.append(opt)}select.value=state.projects.some(p=>p.id===prev)?prev:""}
-function renderNotes(){const q=$("notesSearch").value.toLocaleLowerCase("el");const box=$("notesList");box.replaceChildren();const items=notesArray().filter(n=>(n.title+" "+n.body+" "+projectName(n.projectId)).toLocaleLowerCase("el").includes(q)).sort((a,b)=>Number(!!b.pinned)-Number(!!a.pinned)||(b.updated||"").localeCompare(a.updated||""));if(!items.length)box.append(node("p","Δεν υπάρχουν σημειώσεις.","muted"));for(const n of items){const card=node("div",undefined,"card"),row=node("div",undefined,"row"),info=node("div");info.append(node("div",(n.pinned?"📌 ":"")+n.title,"item-title"),node("div",n.category+(n.projectId?" · "+projectName(n.projectId):""),"sub"));const edit=action("Επεξεργασία","edit-note",n.id);row.append(info,edit);card.append(row,node("p",n.body,"note"));box.append(card)}}
+function renderNotes(){
+const q=$("notesSearch").value.toLocaleLowerCase("el"),box=$("notesList");box.replaceChildren();
+const items=notesArray().filter(n=>(n.title+" "+n.body+" "+projectName(n.projectId)).toLocaleLowerCase("el").includes(q)).sort((a,b)=>Number(!!b.pinned)-Number(!!a.pinned)||(b.updated||"").localeCompare(a.updated||""));
+if(!items.length){box.append(node("p","Δεν υπάρχουν σημειώσεις.","muted"));return}
+for(const n of items){
+const card=node("article",undefined,"card litho-note-card");
+const kicker=node("div",(n.pinned?"◆  ":"")+(n.category||"ΣΗΜΕΙΩΣΗ").toUpperCase(),"litho-note-kicker");
+const heading=node("h2",n.title,"litho-note-title");
+const description=node("p",n.body,"litho-note-excerpt");
+const meta=node("div",n.projectId?projectName(n.projectId):"Γενική σημείωση","litho-note-meta");
+const btn=action("Άνοιγμα σημείωσης  →","edit-note",n.id,"alt");btn.classList.add("litho-note-open");
+card.append(kicker,heading,description,meta,btn);box.append(card)
+}}
+
 function openNote(id){const n=notesArray().find(x=>x.id===id);$("noteForm").dataset.id=id||"";$("noteHeading").textContent=n?"Επεξεργασία σημείωσης":"Νέα σημείωση";$("noteTitle").value=n?.title||"";$("noteBody").value=n?.body||"";$("noteCategory").value=n?.category||"Γενική";$("notePinned").checked=!!n?.pinned;projectSelect($("noteProject"));$("noteProject").value=n?.projectId||"";$("noteDelete").hidden=!n;$("noteDialog").showModal()}
 $("newNote").addEventListener("click",()=>openNote());$("notesSearch").addEventListener("input",renderNotes);$("noteCancel").addEventListener("click",()=>$("noteDialog").close());
 document.addEventListener("click",e=>{const b=e.target.closest('[data-action="edit-note"]');if(b)openNote(b.dataset.id)});
@@ -627,4 +640,51 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #home .editorial-recent .litho-project-row-info .sub,#home .editorial-recent .litho-project-row-status,#home .editorial-recent .litho-project-pct{color:#fff!important}
 #home .editorial-recent .litho-project-open{color:white!important;background:#ffffff2b!important;border:1px solid #ffffff77!important}
 @media(max-width:390px){.litho-project-row-image{flex-basis:88px;height:103px}.litho-project-row-main{gap:9px}}
-</style></body></html>
+</style><style id="litho-functional-screens-v10">
+/* Site: actual workspace tabs, not decorative mockup controls */
+#site #oldSiteWorkspace{background:#f5eee7}
+#site .litho-site-workspace-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;background:#eae0d6;border-radius:12px;margin:15px 0}
+#site .litho-site-workspace-tabs button{border:0;border-radius:9px;padding:12px 3px;background:transparent;color:#44352d;font-weight:600;font-size:12px}
+#site .litho-site-workspace-tabs button[aria-selected=true]{background:#a45d3f;color:#fff;box-shadow:0 2px 5px #38251722}
+#site .old-site-panel[data-site-panel=drawings]{padding:11px!important}
+#site #siteDrawings{display:grid;gap:10px;margin-top:15px}
+#site #siteDrawings .card{border:1px solid #e7d9cc!important;border-radius:11px!important}
+#site #siteDrawingUpload{background:#f1e6db;padding:13px;border:1px dashed #ad826b;border-radius:11px;font-size:12px}
+#site .old-site-stats{grid-template-columns:1fr 1fr!important}
+#site .old-site-stats .stat{background:#fff9f3!important;border:1px solid #e8d8c8;border-radius:12px!important}
+#site .old-site-panel:not([hidden]){display:block}
+#site #drawingPreview{background:#ede7dd!important;min-height:260px}
+#site .drawing-pin,#drawingDialog .drawing-pin{background:#a45d3f!important;color:white!important;border:2px solid white!important;box-shadow:0 2px 8px #0004!important}
+#notes #notesList{display:grid;gap:12px;margin-top:15px}
+#notes #notesList>.litho-note-card{padding:17px!important;background:#fffaf5!important;border-radius:15px!important}
+.litho-note-kicker{font-size:10px;letter-spacing:.15em;color:#a45d3f;font-weight:700;margin-bottom:10px}
+#notes .litho-note-title{font-size:20px!important;font-weight:700!important;margin:0 0 9px!important}
+.litho-note-excerpt{font-size:13px;line-height:1.55;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 13px}
+.litho-note-meta{font-size:11px;color:#796b61;border-top:1px solid #eee2d7;padding-top:12px}
+#notes .litho-note-open{margin-top:12px!important;background:#ede1d6!important;color:#4c342a!important;font-size:12px!important;padding:10px 13px!important}
+#details .litho-project-cover{height:210px!important;border-radius:16px!important;background:linear-gradient(0deg,#211a1460,#211a1410),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=85') center/cover!important}
+#details #detailTitle{font-size:30px!important;letter-spacing:-.04em!important}
+#details #detailLocation{font-size:13px!important}
+</style><script id="litho-functional-site-tabs-v10">
+(function(){
+function init(){
+const site=document.getElementById('site'),workspace=document.getElementById('oldSiteWorkspace');if(!site||!workspace)return;
+const old=site.querySelector('#oldSiteHome .litho-inspection-tabs');if(old)old.remove();
+const tabs=document.createElement('div');tabs.className='litho-site-workspace-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Προβολή αυτοψίας');
+for(const [name,panel] of [['Σχέδιο','drawings'],['Λίστα','issues'],['Φωτογραφίες','photos']]){
+const b=document.createElement('button');b.type='button';b.textContent=name;b.setAttribute('role','tab');b.dataset.siteTarget=panel;
+b.addEventListener('click',()=>{
+for(const x of tabs.children)x.setAttribute('aria-selected',String(x===b));
+const actual=site.querySelector('[data-site-view="'+panel+'"]');
+if(actual)actual.click();
+else if(panel==='photos'){const g=document.getElementById('siteGallery');if(g)g.click();}
+});
+tabs.append(b)}
+const heading=workspace.querySelector('#siteWorkspaceTitle');if(heading)heading.after(tabs);else workspace.prepend(tabs);
+const update=()=>{const visible=Array.from(workspace.querySelectorAll('.old-site-panel')).find(x=>!x.hidden);
+const active=visible?.dataset.sitePanel||'drawings';for(const b of tabs.children)b.setAttribute('aria-selected',String(b.dataset.siteTarget===active));};
+new MutationObserver(update).observe(workspace,{subtree:true,attributes:true,attributeFilter:['hidden']});update();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script></body></html>
