@@ -526,4 +526,75 @@ try{console.info('[LITHO:UI] technical editorial screens initialized')}catch(_){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
+</script><style id="litho-mockup-fidelity-v8">
+/* Eight-screen professional editorial system, responsive and data-driven */
+main>section:not(#home){padding:14px 12px 44px!important}
+main>section:not(#home)>.row:first-of-type h1{font-size:27px!important}
+#projects .litho-section-banner,#tasks .litho-section-banner,#calendar .litho-section-banner,#site .litho-section-banner,#notes .litho-section-banner,#details .litho-section-banner{display:none!important}
+#projects #projectSearch{height:43px!important;margin-bottom:11px!important;background:#fffbf7!important}
+#projects .litho-project-filters{order:0;margin-top:4px!important}
+#projects #projectList{display:grid;gap:10px}
+#projects #projectList>.card{min-height:112px!important;display:flex;flex-direction:column;justify-content:center;position:relative;padding:15px!important;border-radius:14px!important;background:linear-gradient(90deg,#fffaf5 0%,#fffaf5 76%,#f2e8dd 100%)!important}
+#projects #projectList .item-title{font-size:15px!important;font-weight:750!important}
+#projects #projectList .sub{font-size:12px!important}
+#tasks #taskList{display:grid;gap:8px}
+#tasks #taskList>.card{border-radius:12px!important;padding:15px!important;background:#fff9f2!important}
+#tasks #taskList .item-title{font-size:14px!important}
+#calendar .card{padding:15px!important}
+#calendar #calMonth{font-size:16px!important;text-transform:capitalize}
+#calendar .calendar-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important}
+#calendar .calendar-day{min-width:0!important;aspect-ratio:1/1.05;min-height:40px!important;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#calendar .calendar-day small{font-size:8px!important}
+#site #oldSiteHome>h1{font-size:29px!important}
+#site .old-site-hero{background:linear-gradient(90deg,#171513db,#17151345),url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1200&q=85') center/cover!important;border-radius:13px!important}
+#site .old-site-chips{display:flex!important;gap:7px!important;overflow-x:auto}
+#site .old-site-chip{border-radius:9px!important}
+#notes #notesList .card{border-radius:13px!important}
+#details #detailTitle{font-size:26px!important;line-height:1.1!important}
+#details #detailLocation{margin-bottom:18px!important}
+#details .card{padding:16px!important}
+#details .actions{gap:7px!important}
+#details .actions .btn{font-size:11px!important}
+#settings>.card,#gallery .card{border-radius:13px!important}
+.litho-more-list{display:grid;gap:9px;margin-bottom:18px}
+.litho-more-item{display:flex;align-items:center;gap:14px;width:100%;background:#fffaf5;border:1px solid #e9ddd1;border-radius:13px;padding:15px;text-align:left;color:#2d2722;box-shadow:0 5px 12px #3023160a}
+.litho-more-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:9px;color:#a45d3f;background:#f2e4d7;font-size:19px;flex-shrink:0}
+.litho-more-item strong{display:block;font-size:14px}
+.litho-more-item small{display:block;color:#75675d;margin-top:3px;font-size:11px}
+.litho-more-arrow{margin-left:auto;color:#a45d3f;font-size:20px}
+.litho-project-cover{height:155px;border-radius:14px;margin:0 0 15px;background:linear-gradient(0deg,#211a1455,#211a1400),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80') center/cover}
+.litho-inspection-tabs{display:flex;gap:4px;background:#ede3d9;padding:4px;border-radius:11px;margin:10px 0}
+.litho-inspection-tabs button{flex:1;border:0;background:transparent;border-radius:8px;padding:10px 4px;font-size:12px}
+.litho-inspection-tabs button.active{background:#a45d3f;color:#fff}
+@media(max-width:480px){main>section:not(#home){padding-left:12px!important;padding-right:12px!important}#projects #projectList>.card{min-height:105px!important}}
+</style><script id="litho-mockup-fidelity-init">
+(function(){
+function init(){
+const details=document.getElementById('details');
+if(details&&!details.querySelector('.litho-project-cover')){
+const cover=document.createElement('div');cover.className='litho-project-cover';
+const title=details.querySelector('#detailTitle');if(title)title.before(cover);
+}
+const site=document.getElementById('site'),old=site?.querySelector('#oldSiteHome');
+if(old&&!old.querySelector('.litho-inspection-tabs')){
+const tabs=document.createElement('div');tabs.className='litho-inspection-tabs';
+for(const [label,view] of [['Σχέδιο','drawings'],['Λίστα','issues'],['Φωτογραφίες','inspections']]){
+const b=document.createElement('button');b.type='button';b.textContent=label;
+b.addEventListener('click',()=>{for(const x of tabs.children)x.classList.toggle('active',x===b);const target=old.querySelector('[data-site-view="'+view+'"]')||site.querySelector('[data-site-view="'+view+'"]');if(target)target.click();else if(view==='inspections'){const a=old.querySelector('[data-site-view="inspections"]');if(a)a.click()}});
+tabs.append(b)}const hero=old.querySelector('.old-site-hero');if(hero)hero.before(tabs);
+}
+const settings=document.getElementById('settings');
+if(settings&&!settings.querySelector('.litho-more-list')){
+const more=document.createElement('div');more.className='litho-more-list';
+for(const [icon,title,sub,tab] of [['▧','Φωτογραφίες','Συλλογή έργων και εργοταξίων','gallery'],['▤','Έγγραφα','Φάκελοι και δικαιολογητικά έργων','projects'],['▣','Σημειώσεις','Παρατηρήσεις και σκέψεις','notes'],['☷','Εκκρεμότητες','Εργασίες και προθεσμίες','tasks']]){
+const b=document.createElement('button');b.className='litho-more-item';b.type='button';
+const i=document.createElement('span');i.className='litho-more-icon';i.textContent=icon;
+const label=document.createElement('span');const strong=document.createElement('strong');strong.textContent=title;const small=document.createElement('small');small.textContent=sub;label.append(strong,small);
+const arrow=document.createElement('span');arrow.className='litho-more-arrow';arrow.textContent='›';b.append(i,label,arrow);
+b.addEventListener('click',()=>{const nav=document.querySelector('nav [data-tab="'+tab+'"]');if(nav)nav.click();else {const action=document.querySelector('[data-tab="'+tab+'"]');if(action)action.click();else {const target=document.getElementById(tab);if(target){for(const sec of document.querySelectorAll('main>section'))sec.hidden=sec!==target;window.scrollTo(0,0)}}}});
+more.append(b)}const heading=settings.querySelector('h1');if(heading)heading.after(more);else settings.prepend(more);
+}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
 </script></body></html>
