@@ -800,4 +800,98 @@ if(new URLSearchParams(location.search).has("lithoTest")){const print=()=>{const
 #issueDialog .litho-pin-photo-strip{display:flex;gap:8px;overflow-x:auto;min-height:50px}
 #issueDialog .litho-pin-photo-strip img{width:90px;height:95px;object-fit:cover;border-radius:9px}
 #issueDialog .litho-pin-photo-strip button{border:0;background:transparent;padding:0}
-</style></body></html>
+</style><script id="litho-observations-controller">
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const strip=(selector,items,placeholder)=>{
+const target=$(selector);if(!target)return;target.replaceChildren();
+if(!items.length){const empty=document.createElement("div");empty.className="litho-blank-photo";empty.textContent=placeholder||"Δεν υπάρχουν φωτογραφίες.";target.append(empty);return}
+for(const p of items){const img=document.createElement("img");img.alt=p.name||"Φωτογραφία";const url=URL.createObjectURL(p.blob||p);img.src=url;const done=()=>URL.revokeObjectURL(url);img.addEventListener("load",done,{once:true});img.addEventListener("error",done,{once:true});target.append(img)}
+};
+async function photosOf(key,id){
+if(!id)return [];
+try{const items=await allPhotos();return items.filter(x=>x[key]===id)}catch{return []}
+}
+async function persistPhotos(files,field,id,projectId,extra={}){
+if(!files.length)return;
+const db=await photoDB();
+for(const f of files){
+if(!f.type.startsWith("image/")||f.size>8e6)throw Error("Οι φωτογραφίες πρέπει να είναι εικόνες έως 8 MB.");
+await new Promise((resolve,reject)=>{
+const tx=db.transaction("photos","readwrite");tx.objectStore("photos").put({id:crypto.randomUUID(),projectId,name:f.name,blob:f,...extra,[field]:id});
+tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)
+})
+}
+}
+async function deleteAttached(field,id){
+if(!id)return;const images=await photosOf(field,id);if(!images.length)return;const db=await photoDB();
+for(const p of images)await new Promise((resolve,reject)=>{const tx=db.transaction("photos","readwrite");tx.objectStore("photos").delete(p.id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});
+}
+function announce(text){
+let el=$("lithoNotice");if(!el){el=document.createElement("div");el.id="lithoNotice";el.style.cssText="position:fixed;z-index:150;left:12px;right:12px;bottom:96px;border-radius:11px;padding:12px 15px;background:#342b25;color:white;box-shadow:0 5px 15px #0003;font-size:12px;text-align:center";document.body.append(el)}
+el.textContent=text;el.hidden=false;setTimeout(()=>{el.hidden=true},2400)
+}
+async function renderPinPhotos(id){
+const dlg=$("lithoPinEditor");if(!dlg)return;
+dlg.dataset.pinId=id||"";
+const items=await photosOf("pinId",id);
+if(dlg.dataset.pinId!==(id||""))return;
+strip("lithoPinPhotoStrip",items,"Φωτογραφίες παρατήρησης")
+}
+async function renderIssuePhotos(id){
+const dlg=$("issueDialog");if(!dlg)return;
+dlg.dataset.issuePhotoId=id||"";
+const images=await photosOf("issueId",id);
+if(dlg.dataset.issuePhotoId!==(id||""))return;
+strip("lithoIssuePhotoStrip",images,"Φωτογραφίες ζητήματος")
+}
+function init(){
+const pinDlg=$("lithoPinEditor"),pinForm=$("lithoPinForm");if(!pinDlg||!pinForm)return;
+const pinFiles=$("lithoPinFiles"),issueFiles=$("lithoIssueFiles"),issueForm=$("issueForm");
+$("lithoPinCancel").addEventListener("click",()=>pinDlg.close());
+pinFiles.addEventListener("change",()=>{const files=[...pinFiles.files];if(files.length)strip("lithoPinPhotoStrip",files)});
+if(issueFiles){
+issueFiles.addEventListener("change",()=>{const files=[...issueFiles.files];if(files.length)strip("lithoIssuePhotoStrip",files)});
+$("issueDialog").addEventListener("close",()=>{issueFiles.value=""})
+}
+pinForm.addEventListener("submit",async e=>{
+e.preventDefault();if(!activeDrawing)return;
+const btn=pinForm.querySelector('[type="submit"]');btn.disabled=true;
+try{
+const index=Number(pinDlg.dataset.index),pins=[...(activeDrawing.pins||[])],existing=index>=0?pins[index]:null;
+const id=existing?.id||crypto.randomUUID(),x=Number(pinDlg.dataset.x),y=Number(pinDlg.dataset.y);
+const title=$("lithoPinTitle").value.trim();if(!title)throw Error("Συμπλήρωσε τίτλο παρατήρησης.");
+const entry={...existing,id,x,y,title,notes:$("lithoPinNotes").value.trim(),status:$("lithoPinStatus").value,owner:$("lithoPinOwner").value.trim(),due:$("lithoPinDue").value,priority:$("lithoPinPriority").value};
+if(index>=0)pins[index]=entry;else pins.push(entry);
+const next={...activeDrawing,pins};await drawingOp("readwrite",store=>store.put(next));activeDrawing=next;
+const files=[...pinFiles.files];await persistPhotos(files,"pinId",id,activeDrawing.projectId,{drawingId:activeDrawing.id});
+renderDrawingPins();renderDrawings();pinMode=false;$("drawingPinMode").textContent="+ Pin / Issue";pinDlg.close();announce("Η παρατήρηση αποθηκεύτηκε.")
+}catch(err){alert(err?.message||"Αποτυχία αποθήκευσης παρατήρησης.")}finally{btn.disabled=false}
+});
+$("lithoPinDelete").addEventListener("click",async()=>{
+if(!activeDrawing)return;const index=Number(pinDlg.dataset.index),pin=activeDrawing.pins?.[index];if(!pin||!confirm("Να διαγραφεί η παρατήρηση και οι φωτογραφίες της;"))return;
+try{
+const pins=[...(activeDrawing.pins||[])];pins.splice(index,1);const next={...activeDrawing,pins};
+await drawingOp("readwrite",store=>store.put(next));activeDrawing=next;
+await deleteAttached("pinId",pin.id);renderDrawingPins();renderDrawings();pinDlg.close();announce("Η παρατήρηση διαγράφηκε.")
+}catch(err){alert("Δεν ήταν δυνατή η διαγραφή της παρατήρησης.")}
+});
+if(issueForm){
+issueForm.addEventListener("submit",async()=>{
+const issueId=issueForm.dataset.id||issueForm.dataset.newId;
+if(!issueId||!state.siteIssues?.some(x=>x.id===issueId))return;
+const files=[...issueFiles.files];if(!files.length)return;
+try{await persistPhotos(files,"issueId",issueId,$("issueProject").value);issueFiles.value="";announce("Οι φωτογραφίες αποθηκεύτηκαν.")}catch(err){alert("Το ζήτημα αποθηκεύτηκε, αλλά όχι οι φωτογραφίες: "+err.message)}
+});
+$("issueDelete").addEventListener("click",async()=>{
+const issueId=issueForm.dataset.id;
+if(!issueId||state.siteIssues?.some(x=>x.id===issueId))return;
+try{await deleteAttached("issueId",issueId)}catch(_){}
+});
+}
+}
+if(window.LITHO){window.LITHO.renderPinPhotos=renderPinPhotos;window.LITHO.renderIssuePhotos=renderIssuePhotos}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script></body></html>
