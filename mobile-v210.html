@@ -163,7 +163,17 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(state));render();ret
 const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cls)n.className=cls;return n};
 function action(label,name,id,cls="alt"){const b=node("button",label,"btn "+cls);b.dataset.action=name;if(id)b.dataset.id=id;return b}
 function projectName(id){return state.projects.find(p=>p.id===id)?.title||"Χωρίς έργο"}
-function projectCard(p){const c=node("div",undefined,"card"),r=node("div",undefined,"row"),left=node("div");left.append(node("div",p.title,"item-title"),node("div",p.location||"Χωρίς τοποθεσία","sub"));r.append(left,action("Καρτέλα έργου →","open-project",p.id));c.append(r,node("div",p.status==="active"?"Ενεργό":p.status==="paused"?"Σε αναμονή":"Ολοκληρωμένο","sub"));const bar=node("div",undefined,"progress"),fill=node("span");fill.style.width=Math.max(0,Math.min(100,Number(p.progress)||0))+"%";bar.append(fill);c.append(bar,node("div",(Number(p.progress)||0)+"% · "+state.tasks.filter(t=>t.projectId===p.id&&!t.done).length+" εκκρεμείς εργασίες","sub"));if(p.notes)c.append(node("p",p.notes,"note muted"));return c}
+function projectCard(p){
+const c=node("article",undefined,"card litho-project-row"),r=node("div",undefined,"litho-project-row-main"),left=node("div",undefined,"litho-project-row-info");
+const image=node("div",undefined,"litho-project-row-image");image.setAttribute("role","img");image.setAttribute("aria-label","Ενδεικτική αρχιτεκτονική εικόνα");image.style.backgroundImage="url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=480&q=75')";
+const name=node("div",p.title,"item-title"),location=node("div",p.location||"Χωρίς τοποθεσία","sub");left.append(name,location);
+const status=node("div",p.status==="active"?"Σε εξέλιξη":p.status==="paused"?"Σε αναμονή":"Ολοκληρωμένο","litho-project-row-status");
+const pct=Math.max(0,Math.min(100,Number(p.progress)||0));const bar=node("div",undefined,"progress"),fill=node("span");fill.style.width=pct+"%";bar.append(fill);
+const meter=node("div",undefined,"litho-project-meter");meter.append(bar,node("span",pct+"%","litho-project-pct"));
+left.append(status,meter);
+const open=action("›","open-project",p.id,"alt");open.classList.add("litho-project-open");open.setAttribute("aria-label","Άνοιγμα έργου "+p.title);
+r.append(image,left,open);c.append(r);return c}
+
 function taskCard(t){const c=node("div",undefined,"card"),r=node("div",undefined,"row"),left=node("div"),label=node("label",undefined,"row"),check=node("input");check.type="checkbox";check.className="check";check.checked=!!t.done;check.setAttribute("aria-label","Ολοκλήρωση εργασίας "+t.title);check.addEventListener("change",()=>{t.done=check.checked;save()});left.append(node("div",t.title,"item-title"),node("div",projectName(t.projectId)+" · "+(t.due||"Χωρίς προθεσμία")+" · "+(t.priority==="high"?"Υψηλή":t.priority==="low"?"Χαμηλή":"Κανονική"),"sub"));label.append(check,left);r.append(label,action("Επεξεργασία","edit-task",t.id));c.append(r);if(t.notes)c.append(node("p",t.notes,"note muted"));return c}
 function fill(id,items,make){const box=$(id);box.replaceChildren();if(!items.length){box.append(node("div","Δεν υπάρχουν ακόμη καταχωρίσεις.","empty"));return}items.forEach(item=>box.append(make(item)))}
 function render(){const open=state.tasks.filter(t=>!t.done);$("sProjects").textContent=state.projects.length;$("sActive").textContent=state.projects.filter(p=>p.status==="active").length;$("sPending").textContent=open.length;$("sDone").textContent=state.tasks.length-open.length;fill("recent",state.projects.slice().reverse().slice(0,3),projectCard);fill("upcoming",open.slice().sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999")).slice(0,4),taskCard);const q=$("projectSearch").value.toLocaleLowerCase("el");fill("projectList",state.projects.filter(p=>(p.title+" "+(p.location||"")).toLocaleLowerCase("el").includes(q)).slice().reverse(),projectCard);const filter=$("taskFilter").value;fill("taskList",state.tasks.filter(t=>filter==="all"||(filter==="open"?!t.done:!!t.done)).slice().reverse(),taskCard)}
@@ -597,4 +607,24 @@ more.append(b)}const heading=settings.querySelector('h1');if(heading)heading.aft
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
-</script></body></html>
+</script><style id="litho-real-project-cards-v9">
+#projects #projectList{display:grid!important;gap:10px!important}
+#projects #projectList>.litho-project-row{min-height:0!important;padding:9px!important;background:#fffaf5!important;border-radius:15px!important;box-shadow:0 4px 14px #38261716!important}
+.litho-project-row-main{display:flex;align-items:center;gap:12px;min-width:0}
+.litho-project-row-image{flex:0 0 105px;height:110px;background:#d6c6b5 center/cover;border-radius:11px}
+.litho-project-row-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+#projects .litho-project-row-info .item-title{font-size:14px!important;line-height:1.2;font-weight:750!important}
+#projects .litho-project-row-info .sub{font-size:11px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.litho-project-row-status{font-size:11px;color:#986043;margin-top:3px}
+.litho-project-meter{display:flex;align-items:center;gap:7px;margin-top:2px}
+.litho-project-meter .progress{height:5px!important;flex:1;min-width:0;margin:0!important}
+.litho-project-pct{font-size:11px;font-weight:650}
+#projects .litho-project-open{padding:0!important;background:transparent!important;border:0!important;color:#3b3029!important;font-size:25px!important;width:24px;min-width:24px;box-shadow:none!important}
+#home .editorial-recent .litho-project-row{min-height:200px!important;background:linear-gradient(0deg,#1d1815dc,#1d181533),url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85') center/cover!important;color:white!important;display:flex!important;align-items:flex-end!important}
+#home .editorial-recent .litho-project-row-main{width:100%!important;align-items:flex-end!important}
+#home .editorial-recent .litho-project-row-image{display:none!important}
+#home .editorial-recent .litho-project-row-info .item-title{font-size:19px!important;color:#fff!important}
+#home .editorial-recent .litho-project-row-info .sub,#home .editorial-recent .litho-project-row-status,#home .editorial-recent .litho-project-pct{color:#fff!important}
+#home .editorial-recent .litho-project-open{color:white!important;background:#ffffff2b!important;border:1px solid #ffffff77!important}
+@media(max-width:390px){.litho-project-row-image{flex-basis:88px;height:103px}.litho-project-row-main{gap:9px}}
+</style></body></html>
